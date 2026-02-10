@@ -9,34 +9,43 @@
     <style>
         body, html { margin: 0; padding: 0; background: #ffffff; height: 100vh; font-family: 'MedievalSharp', serif; overflow: hidden; }
 
-        /* --- COVER --- */
+        /* --- THE COVER --- */
         #cover {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #641212; color: white; z-index: 1000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            text-align: center; transition: transform 0.8s ease-in-out;
         }
-        .hide-cover { transform: translateY(-100%); }
+        .hide-cover { transform: translateY(-100%); pointer-events: none; }
 
         .title { font-family: 'Cinzel Decorative', serif; font-size: clamp(2rem, 8vw, 3.5rem); color: #ffd700; margin: 10px; }
-        #guilt-trip { height: 60px; color: #ffd700; margin-bottom: 20px; font-size: 1.3rem; padding: 0 20px; max-width: 80%; }
+        #guilt-trip { height: 60px; color: #ffd700; margin-bottom: 20px; font-size: 1.3rem; padding: 0 20px; }
 
-        /* --- BUTTON AREA --- */
-        .btn-zone { position: relative; width: 100%; height: 150px; }
+        /* --- STABLE BUTTON AREA --- */
+        .btn-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 250px;
+            position: relative;
+        }
         
         #yes-btn { 
-            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-            padding: 15px 50px; font-size: 1.2rem; cursor: pointer; background: white; 
+            padding: 18px 60px; font-size: 1.4rem; cursor: pointer; background: white; 
             color: #641212; border: none; border-radius: 50px; font-weight: bold;
-            z-index: 1100; font-family: 'Cinzel Decorative'; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1200; font-family: 'Cinzel Decorative'; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+            position: relative; /* Changed from absolute to be more stable */
         }
 
         #no-btn { 
-            position: absolute; left: calc(50% + 140px); top: 50%; transform: translateY(-50%);
+            position: fixed; /* Jumps everywhere, but doesn't block YES */
             padding: 10px 30px; cursor: pointer; background: transparent; 
             color: white; border: 1px solid white; border-radius: 50px;
-            z-index: 1050; transition: all 0.2s ease; white-space: nowrap;
+            z-index: 1100; transition: all 0.2s ease; font-family: 'MedievalSharp';
+            top: 65%; left: 70%;
         }
 
         /* --- STORY PAGE --- */
@@ -64,7 +73,7 @@
         <h1 class="title">#ViGotKOMpany</h1>
         <div id="guilt-trip">Ready to see our story?</div>
 
-        <div class="btn-zone">
+        <div class="btn-wrapper">
             <button id="yes-btn" onclick="go()">YES</button>
             <button id="no-btn" onmouseover="dance()" onclick="noGuilt()">NO</button>
         </div>
@@ -74,7 +83,7 @@
         <div class="text-section">
             <h2 id="st-title">The Closing Rank</h2>
             <div id="st-body">
-                <p><span class="drop-cap">O</span>nce, at NIT Warangal, destiny held a magic number—a closing rank—to bring them together. In a chaotic lab, Vipin passed his notes to Komal, and the spell was cast.</p>
+                <p><span class="drop-cap">O</span>nce, at NIT Warangal, destiny held a magic number—a closing rank—to bring them together. In a chaotic lab, Vipin passed his notes to Komal, and the spell of #VIMAL began.</p>
             </div>
         </div>
 
@@ -91,16 +100,13 @@
 
     <script>
         const trips = [
-            "Are you sure? Think about the Krushers! 🥤",
+            "Think about the Krushers! 🥤",
             "But the 6 AM Podi Dosa drives... ☕",
-            "Dublin is going to be very cold alone! ❄️",
-            "I straightened my hair for that date, Vipin! 💇‍♀️",
-            "Is Biryani really more important than us? 🍛",
-            "Even the crocodiles want you to click Yes! 🐊",
-            "Don't make me wait another 3 months! ✈️",
-            "I'm telling everyone you're a fitness freak! 😂",
-            "Fine, no Manchuria for you today. ❌",
-            "Last chance... My Pink Kanjivaram is waiting! 👗"
+            "Dublin is cold alone! ❄️",
+            "I straightened my hair for this! 💇‍♀️",
+            "Biryani > Komal? Really? 🍛",
+            "Even the crocodiles want a YES! 🐊",
+            "Don't make me wait another 3 months! ✈️"
         ];
         
         let tIdx = 0;
@@ -108,8 +114,7 @@
 
         function dance() {
             const no = document.getElementById('no-btn');
-            // Move No button so it's hard to catch but still on screen
-            no.style.left = Math.random() * 80 + "%";
+            no.style.left = Math.random() * 80 + 10 + "%";
             no.style.top = Math.random() * 60 + 20 + "%";
         }
 
@@ -117,30 +122,30 @@
             const msg = document.getElementById('guilt-trip');
             const yes = document.getElementById('yes-btn');
             
-            // Update message with escalation
             msg.innerText = trips[tIdx % trips.length];
             tIdx++;
 
-            // Make YES button grow bigger with every NO click
-            yesScale += 0.2;
-            yes.style.transform = translate(-50%, -50%) scale(${yesScale});
+            // Maximum growth to prevent overlapping issues
+            if (yesScale < 2.5) {
+                yesScale += 0.2;
+                yes.style.transform = scale(${yesScale});
+            }
             
-            // Shake the screen for extra drama
-            document.body.style.backgroundColor = "#ffcccc";
-            setTimeout(() => document.body.style.backgroundColor = "#ffffff", 100);
+            dance(); // Move it again on click
         }
 
         function go() {
+            console.log("Yes Clicked!");
             document.getElementById('cover').classList.add('hide-cover');
         }
 
         const chapters = [
             { t: "The Closing Rank", b: "<p><span class='drop-cap'>O</span>nce, at NIT Warangal, destiny used a closing rank to bring them together. In a chaotic lab, Vipin passed his notes to Komal, and the bond of #VIMAL began.</p>", i1: "https://i.imgur.com/7S8V2mX.png", i2: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500" },
-            { t: "The Samosa 'Date'", b: "<p><span class='drop-cap'>I</span>n Nov 2017, they met at Barista for a 'treat'. With no chairs, they ate Samosa Chat under the stars, followed by brain-freezing Krushers and movie magic.</p>", i1: "https://images.unsplash.com/photo-1601050690597-df056fb36792?w=500", i2: "https://images.unsplash.com/photo-1541167760496-162955ed8a9f?w=500" },
-            { t: "The Hillside Proposal", b: "<p><span class='drop-cap'>O</span>n Ganesh Chaturthi 2018, Vipin recreated a movie scene at the TV Tower hill. Wearing slippers in 35° heat, he finally held her hand and never let go.</p>", i1: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500", i2: "https://images.unsplash.com/photo-1516589174184-e6646f654862?w=500" },
-            { t: "Dublin & Sitcoms", b: "<p><span class='drop-cap'>T</span>hrough COVID and long years in Dublin, they survived on 'The Office' marathons and 30km Biryani quests. Distance only made the heart grow fonder.</p>", i1: "https://images.unsplash.com/photo-1522158673245-f00de76db0ad?w=500", i2: "https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?w=500" },
-            { t: "The Wedding 2025", b: "<p><span class='drop-cap'>N</span>ow, from Mehendi greens to the Pink Kanjivaram, #VIMAL officially becomes #ViGotKOMpany. The girl who falls and the boy who catches her—forever.</p>", i1: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500", i2: "https://images.unsplash.com/photo-1519741497674-611481863552?w=500" },
-            { t: "A Valentine's Wish", b: "<div class='valentine-text'>Happy Valentine's Day!</div><p style='margin-top:10px;'>To my favorite human: thank you for the notes, the Samosas, the Dublin calls, and for always catching me. I love you! #ViGotKOMpany</p>", i1: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500", i2: "https://images.unsplash.com/photo-1516589174184-e6646f654862?w=500" }
+            { t: "The Samosa 'Date'", b: "<p><span class='drop-cap'>I</span>n Nov 2017, they met at Barista for a 'treat'. With no chairs, they ate Samosa Chat under the stars, followed by brain-freezing Krushers.</p>", i1: "https://images.unsplash.com/photo-1601050690597-df056fb36792?w=500", i2: "https://images.unsplash.com/photo-1541167760496-162955ed8a9f?w=500" },
+            { t: "The Hillside Proposal", b: "<p><span class='drop-cap'>O</span>n Ganesh Chaturthi 2018, Vipin recreated a movie scene at the TV Tower hill. Wearing slippers in 35° heat, he finally held her hand.</p>", i1: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500", i2: "https://images.unsplash.com/photo-1516589174184-e6646f654862?w=500" },
+            { t: "Dublin & Sitcoms", b: "<p><span class='drop-cap'>T</span>hrough COVID and long years in Dublin, they survived on 'The Office' and long-distance calls. Home is wherever we are together.</p>", i1: "https://images.unsplash.com/photo-1522158673245-f00de76db0ad?w=500", i2: "https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?w=500" },
+            { t: "The Wedding 2025", b: "<p><span class='drop-cap'>N</span>ow, from Mehendi greens to the Pink Kanjivaram, #VIMAL becomes #ViGotKOMpany. The boy who catches the girl who falls—forever.</p>", i1: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500", i2: "https://images.unsplash.com/photo-1519741497674-611481863552?w=500" },
+            { t: "Happy Valentine's", b: "<div class='valentine-text'>I Love You!</div><p style='margin-top:10px;'>To my favorite person: Here's to us, our madness, and our forever. Happy Valentine's Day, Vipin! #ViGotKOMpany</p>", i1: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500", i2: "https://images.unsplash.com/photo-1516589174184-e6646f654862?w=500" }
         ];
 
         let current = 0;
