@@ -6,65 +6,6 @@
     <title>#ViGotKOMpany | The Tale</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=MedievalSharp&family=Great+Vibes&display=swap" rel="stylesheet">
     
-    <script>
-        // Move all logic to the top and wrap in a function to ensure it's defined
-        let current = 0;
-        let yesScale = 1;
-        let tIdx = 0;
-
-        const trips = [
-            "Think about the Krushers! 🥤",
-            "But the 6 AM Podi Dosa drives... ☕",
-            "Dublin is cold alone! ❄️",
-            "I straightened my hair for this! 💇‍♀️",
-            "Biryani > Komal? Really? 🍛",
-            "Even the crocodiles want a YES! 🐊",
-            "Don't make me wait another 3 months! ✈️"
-        ];
-
-        const chapters = [
-            { t: "The Closing Rank", b: "<p><span class='drop-cap'>O</span>nce, at NIT Warangal, destiny used a closing rank to bring them together. In a chaotic lab, Vipin passed his notes to Komal, and the bond of #VIMAL began.</p>", i1: "https://i.imgur.com/7S8V2mX.png", i2: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500" },
-            { t: "The Samosa 'Date'", b: "<p><span class='drop-cap'>I</span>n Nov 2017, they met at Barista for a 'treat'. With no chairs, they ate Samosa Chat under the stars, followed by brain-freezing Krushers.</p>", i1: "https://images.unsplash.com/photo-1601050690597-df056fb36792?w=500", i2: "https://images.unsplash.com/photo-1541167760496-162955ed8a9f?w=500" },
-            { t: "The Hillside Proposal", b: "<p><span class='drop-cap'>O</span>n Ganesh Chaturthi 2018, Vipin recreated a movie scene at the TV Tower hill. Wearing slippers in 35° heat, he finally held her hand.</p>", i1: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500", i2: "https://images.unsplash.com/photo-1516589174184-e6646f654862?w=500" },
-            { t: "Dublin & Sitcoms", b: "<p><span class='drop-cap'>T</span>hrough COVID and long years in Dublin, they survived on 'The Office' and long-distance calls. Home is wherever we are together.</p>", i1: "https://images.unsplash.com/photo-1522158673245-f00de76db0ad?w=500", i2: "https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?w=500" },
-            { t: "The Wedding 2025", b: "<p><span class='drop-cap'>N</span>ow, from Mehendi greens to the Pink Kanjivaram, #VIMAL becomes #ViGotKOMpany. The boy who catches the girl who falls—forever.</p>", i1: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500", i2: "https://images.unsplash.com/photo-1519741497674-611481863552?w=500" },
-            { t: "Happy Valentine's", b: "<div class='valentine-text'>I Love You!</div><p style='margin-top:10px;'>To my favorite person: Here's to us, our madness, and our forever. Happy Valentine's Day, Vipin! #ViGotKOMpany</p>", i1: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500", i2: "https://images.unsplash.com/photo-1516589174184-e6646f654862?w=500" }
-        ];
-
-        window.go = function() {
-            document.getElementById('cover').classList.add('hide-cover');
-        };
-
-        window.dance = function() {
-            const no = document.getElementById('no-btn');
-            no.style.left = Math.random() * 80 + 10 + "%";
-            no.style.top = Math.random() * 60 + 20 + "%";
-        };
-
-        window.noGuilt = function() {
-            const msg = document.getElementById('guilt-trip');
-            const yes = document.getElementById('yes-btn');
-            msg.innerText = trips[tIdx % trips.length];
-            tIdx++;
-            if (yesScale < 2.5) {
-                yesScale += 0.2;
-                yes.style.transform = scale(${yesScale});
-            }
-            window.dance();
-        };
-
-        window.step = function(dir) {
-            current += dir;
-            const ch = chapters[current];
-            document.getElementById('st-title').innerText = ch.t;
-            document.getElementById('st-body').innerHTML = ch.b;
-            document.getElementById('pic1').src = ch.i1;
-            document.getElementById('pic2').src = ch.i2;
-            document.getElementById('prev').style.visibility = current === 0 ? 'hidden' : 'visible';
-            document.getElementById('next').style.visibility = current === chapters.length - 1 ? 'hidden' : 'visible';
-        };
-    </script>
-
     <style>
         body, html { margin: 0; padding: 0; background: #ffffff; height: 100vh; font-family: 'MedievalSharp', serif; overflow: hidden; }
         #cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #641212; color: white; z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: transform 0.8s ease-in-out; }
@@ -118,5 +59,63 @@
         </div>
     </div>
 
+    <script>
+        let current = 0;
+        let yesScale = 1;
+        let tIdx = 0;
+
+        const trips = [
+            "Think about the Krushers! 🥤",
+            "But the 6 AM Podi Dosa drives... ☕",
+            "Dublin is cold alone! ❄️",
+            "I straightened my hair for this! 💇‍♀️",
+            "Biryani > Komal? Really? 🍛",
+            "Even the crocodiles want a YES! 🐊",
+            "Don't make me wait another 3 months! ✈️"
+        ];
+
+        const chapters = [
+            { t: "The Closing Rank", b: "<p><span class='drop-cap'>O</span>nce, at NIT Warangal, destiny used a closing rank to bring them together. In a chaotic lab, Vipin passed his notes to Komal, and the bond of #VIMAL began.</p>", i1: "https://i.imgur.com/7S8V2mX.png", i2: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500" },
+            { t: "The Samosa 'Date'", b: "<p><span class='drop-cap'>I</span>n Nov 2017, they met at Barista for a 'treat'. With no chairs, they ate Samosa Chat under the stars, followed by brain-freezing Krushers.</p>", i1: "https://images.unsplash.com/photo-1601050690597-df056fb36792?w=500", i2: "https://images.unsplash.com/photo-1541167760496-162955ed8a9f?w=500" },
+            { t: "The Hillside Proposal", b: "<p><span class='drop-cap'>O</span>n Ganesh Chaturthi 2018, Vipin recreated a movie scene at the TV Tower hill. Wearing slippers in 35° heat, he finally held her hand.</p>", i1: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500", i2: "https://images.unsplash.com/photo-1516589174184-e6646f654862?w=500" },
+            { t: "Dublin & Sitcoms", b: "<p><span class='drop-cap'>T</span>hrough COVID and long years in Dublin, they survived on 'The Office' and long-distance calls. Home is wherever we are together.</p>", i1: "https://images.unsplash.com/photo-1522158673245-f00de76db0ad?w=500", i2: "https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?w=500" },
+            { t: "The Wedding 2025", b: "<p><span class='drop-cap'>N</span>ow, from Mehendi greens to the Pink Kanjivaram, #VIMAL becomes #ViGotKOMpany. The boy who catches the girl who falls—forever.</p>", i1: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500", i2: "https://images.unsplash.com/photo-1519741497674-611481863552?w=500" },
+            { t: "Happy Valentine's", b: "<div class='valentine-text'>I Love You!</div><p style='margin-top:10px;'>To my favorite person: Here's to us, our madness, and our forever. Happy Valentine's Day, Vipin! #ViGotKOMpany</p>", i1: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500", i2: "https://images.unsplash.com/photo-1516589174184-e6646f654862?w=500" }
+        ];
+
+        window.go = function() {
+            document.getElementById('cover').classList.add('hide-cover');
+        };
+
+        window.dance = function() {
+            const no = document.getElementById('no-btn');
+            no.style.left = Math.random() * 80 + 10 + "%";
+            no.style.top = Math.random() * 60 + 20 + "%";
+        };
+
+        window.noGuilt = function() {
+            const msg = document.getElementById('guilt-trip');
+            const yes = document.getElementById('yes-btn');
+            msg.innerText = trips[tIdx % trips.length];
+            tIdx++;
+            if (yesScale < 2.5) {
+                yesScale += 0.2;
+                // Fixed the syntax error below:
+                yes.style.transform = `scale(${yesScale})`;
+            }
+            window.dance();
+        };
+
+        window.step = function(dir) {
+            current += dir;
+            const ch = chapters[current];
+            document.getElementById('st-title').innerText = ch.t;
+            document.getElementById('st-body').innerHTML = ch.b;
+            document.getElementById('pic1').src = ch.i1;
+            document.getElementById('pic2').src = ch.i2;
+            document.getElementById('prev').style.visibility = current === 0 ? 'hidden' : 'visible';
+            document.getElementById('next').style.visibility = current === chapters.length - 1 ? 'hidden' : 'visible';
+        };
+    </script>
 </body>
 </html>
