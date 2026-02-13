@@ -100,7 +100,16 @@
         #stat-footer { font-size: 0.7rem; color: #888; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px; }
 
         #yes-btn { padding: 15px 60px; font-size: 1.3rem; cursor: pointer; background: white; color: var(--royal-red); border: none; border-radius: 50px; font-weight: bold; font-family: 'Cinzel Decorative'; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
-        #no-btn { position: fixed; padding: 10px 30px; cursor: pointer; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.5); border-radius: 50px; }
+        #no-btn { 
+    position: absolute; /* Changed from fixed to absolute to keep it in the box */
+    padding: 10px 30px; 
+    cursor: pointer; 
+    background: rgba(255,255,255,0.1); 
+    color: white; 
+    border: 1px solid rgba(255,255,255,0.5); 
+    border-radius: 50px; 
+    z-index: 1100; 
+}
     </style>
 </head>
 <body>
