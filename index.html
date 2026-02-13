@@ -11,94 +11,108 @@
             --royal-red: #641212;
             --gold: #ffd700;
             --parchment: #fdfaf0;
+            --tape-color: rgba(255, 255, 255, 0.3);
         }
 
         body, html { margin: 0; padding: 0; background: var(--parchment); height: 100vh; font-family: 'MedievalSharp', serif; overflow: hidden; }
         
+        /* Cover Page */
         #cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--royal-red); color: white; z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1); }
         .hide-cover { transform: translateY(-100%); pointer-events: none; }
         
         .title { font-family: 'Cinzel Decorative', serif; font-size: clamp(2rem, 6vw, 3rem); color: var(--gold); margin: 10px; }
-        #guilt-trip { height: 60px; color: var(--gold); margin-bottom: 20px; font-size: 1.1rem; font-style: italic; max-width: 80%; }
 
+        /* Main Container */
         #story-container { 
             width: 100%; 
             height: 100vh; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            padding: 10px; 
-            box-sizing: border-box; 
+            background-image: radial-gradient(#d2c2a4 0.5px, transparent 0.5px); /* Polka dot paper feel */
+            background-size: 20px 20px;
         }
         
         .text-section { 
+            width: 90%;
             max-width: 600px; 
-            flex-shrink: 0;
-            transition: all 0.5s ease;
+            padding: 20px 10px;
             text-align: center;
+            z-index: 10;
         }
-        .fade-out { opacity: 0; transform: translateY(10px); }
         
         .drop-cap { font-family: 'Cinzel Decorative'; font-size: 3rem; color: var(--royal-red); float: left; line-height: 0.8; margin-right: 10px; }
-        h2 { font-family: 'Cinzel Decorative'; color: var(--royal-red); margin: 10px 0; font-size: 1.4rem; border-bottom: 2px solid var(--gold); display: inline-block; }
+        h2 { font-family: 'Cinzel Decorative'; color: var(--royal-red); margin: 5px 0; font-size: 1.4rem; border-bottom: 2px solid var(--gold); display: inline-block; }
 
-        /* The scrollable area for images */
-        #scroll-area {
+        /* SCRAPBOOK COLLAGE AREA */
+        #collage-area {
             flex-grow: 1;
             width: 100%;
-            overflow-y: auto; /* Allow vertical scrolling if images are many/tall */
+            position: relative; /* Essential for scattered positioning */
+            overflow: hidden;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            padding: 10px 0;
-            scrollbar-width: thin; /* For Firefox */
-            scrollbar-color: var(--gold) transparent;
+            align-items: center;
         }
 
-        .images { 
-            display: grid; 
-            gap: 15px; 
-            width: 100%; 
-            max-width: 500px; 
-            transition: all 0.5s ease;
-        }
-
-        .box { 
+        .photo-frame { 
+            position: absolute;
             background: #fff;
-            padding: 5px;
+            padding: 10px 10px 30px 10px; /* Polaroid bottom heavy */
+            box-shadow: 3px 10px 20px rgba(0,0,0,0.2);
             border: 1px solid #ddd;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-radius: 4px;
-            /* No aspect-ratio here so image height is natural */
+            width: clamp(150px, 40vw, 250px);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+            animation: float 4s ease-in-out infinite alternate;
         }
 
-        .box img { 
+        /* Washi Tape Effect */
+        .photo-frame::before {
+            content: "";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-2deg);
+            width: 80px;
+            height: 25px;
+            background: var(--tape-color);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .photo-frame img { 
             width: 100%; 
-            height: auto; 
+            height: auto;
             display: block;
-            object-fit: contain; /* ENTIRE image is visible, no cropping */
+            pointer-events: none;
         }
 
+        @keyframes float {
+            from { transform: translateY(0) rotate(var(--r)); }
+            to { transform: translateY(-10px) rotate(var(--r)); }
+        }
+
+        /* Navigation & Footer */
         .nav-wrapper {
-            flex-shrink: 0;
             width: 100%;
+            padding: 20px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: var(--parchment);
-            padding-top: 10px;
+            background: linear-gradient(transparent, var(--parchment));
             z-index: 10;
         }
 
-        .nav-bar { display: flex; gap: 40px; font-family: 'Cinzel Decorative'; color: #ae9656; font-weight: bold; font-size: 0.9rem; }
-        .nav-bar span { cursor: pointer; padding: 5px; }
-        #stat-footer { font-size: 0.7rem; color: #888; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-bar { display: flex; gap: 40px; font-family: 'Cinzel Decorative'; color: #ae9656; font-weight: bold; }
+        .nav-bar span { cursor: pointer; transition: color 0.3s; }
+        .nav-bar span:hover { color: var(--royal-red); }
+        #stat-footer { font-size: 0.7rem; color: #888; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; }
 
-        .valentine-text { font-family: 'Great Vibes', cursive; font-size: 2.8rem; color: var(--royal-red); }
-        
-        .btn-wrapper { height: 150px; display: flex; align-items: center; justify-content: center; }
-        #yes-btn { padding: 15px 60px; font-size: 1.3rem; cursor: pointer; background: white; color: var(--royal-red); border: none; border-radius: 50px; font-weight: bold; font-family: 'Cinzel Decorative'; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
-        #no-btn { position: fixed; padding: 8px 25px; cursor: pointer; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.5); border-radius: 50px; }
+        .valentine-text { font-family: 'Great Vibes', cursive; font-size: 3rem; color: var(--royal-red); }
+
+        #yes-btn { padding: 15px 60px; font-size: 1.3rem; cursor: pointer; background: white; color: var(--royal-red); border: none; border-radius: 50px; font-weight: bold; font-family: 'Cinzel Decorative'; box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 1200; }
+        #no-btn { position: fixed; padding: 8px 25px; cursor: pointer; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.5); border-radius: 50px; z-index: 1100; }
     </style>
 </head>
 <body>
@@ -106,8 +120,7 @@
     <div id="cover">
         <div style="font-family: 'Great Vibes'; font-size: 2rem; color: var(--gold);">The Chronicles of #ViGotKOMpany</div>
         <h1 class="title">Will You Enter?</h1>
-        <div id="guilt-trip">Click YES to begin our epic saga...</div>
-        <div class="btn-wrapper">
+        <div style="height: 150px; display: flex; align-items: center;">
             <button id="yes-btn" onclick="window.go()">YES</button>
             <button id="no-btn" onmouseover="window.dance()">NO</button>
         </div>
@@ -117,18 +130,12 @@
         <div id="content-wrapper" class="text-section">
             <h2 id="st-title">The Closing Rank</h2>
             <div id="st-body">
-                <p><span class="drop-cap">O</span>nce, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>
+                <p><span class="drop-cap">O</span>nce, at NIT Warangal, destiny used a 'closing rank' to write our first chapter.</p>
             </div>
         </div>
 
-        <div id="scroll-area">
-            <div class="images" id="image-grid">
-                <div class="box" id="b1"><img id="pic1" src="1.jpeg"></div>
-                <div class="box" id="b2"><img id="pic2" src="2.jpeg"></div>
-                <div class="box" id="b3"><img id="pic3" src="3.jpeg"></div>
-                <div class="box" id="b4"><img id="pic4" src="4.jpeg"></div>
+        <div id="collage-area">
             </div>
-        </div>
 
         <div class="nav-wrapper">
             <div class="nav-bar">
@@ -141,16 +148,6 @@
 
     <script>
         let current = 0;
-        let yesScale = 1;
-
-        const stats = [
-            "Current Status: Lab Partners 🧬",
-            "Current Status: Samosa Enthusiasts 🥟",
-            "Current Status: Filmy Hero & His Heroine 🎬",
-            "Current Status: Officially #ViGotKOMpany 💍",
-            "Current Status: Forever & Always ❤️"
-        ];
-
         const chapters = [
             { 
                 t: "The Closing Rank", 
@@ -160,22 +157,22 @@
             { 
                 t: "The Barista 'Non-Date'", 
                 b: "<p><span class='drop-cap'>I</span>n Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>", 
-                imgs: ["https://images.unsplash.com/photo-1541167760496-162955ed8a9f?w=800", "https://images.unsplash.com/photo-1601050690597-df056fb36792?w=800"] 
+                imgs: ["https://images.unsplash.com/photo-1541167760496-162955ed8a9f?w=600", "https://images.unsplash.com/photo-1601050690597-df056fb36792?w=600"] 
             },
             { 
                 t: "The Hillside Proposal", 
                 b: "<p><span class='drop-cap'>G</span>anesh Chaturthi 2018. Recreating 'Om Shanti Oshana' at the TV Tower hill—in 35° heat and slippers!</p>", 
-                imgs: ["https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"] 
+                imgs: ["https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600"] 
             },
             { 
                 t: "The Wedding 2025", 
                 b: "<p><span class='drop-cap'>W</span>e traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany.</p>", 
-                imgs: ["https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800", "https://images.unsplash.com/photo-1519741497674-611481863552?w=800"] 
+                imgs: ["https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600", "https://images.unsplash.com/photo-1519741497674-611481863552?w=600"] 
             },
             { 
                 t: "Happy Valentine's Day", 
                 b: "<div class='valentine-text'>I Love You, V!</div><p>To my favorite person: Here’s to our madness.</p>", 
-                imgs: ["https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800"] 
+                imgs: ["https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600"] 
             }
         ];
 
@@ -187,13 +184,51 @@
             no.style.top = Math.random() * 70 + 15 + "%";
         };
 
-        window.step = (dir) => {
-            const wrapper = document.getElementById('content-wrapper');
-            const grid = document.getElementById('image-grid');
-            const scroll = document.getElementById('scroll-area');
+        function scatterImages(imgs) {
+            const area = document.getElementById('collage-area');
+            area.innerHTML = '';
             
-            wrapper.classList.add('fade-out');
-            grid.style.opacity = "0";
+            imgs.forEach((src, i) => {
+                const frame = document.createElement('div');
+                frame.className = 'photo-frame';
+                
+                // Random Scattering Logic
+                const rotation = Math.floor(Math.random() * 30) - 15; // -15 to +15 deg
+                const x = Math.floor(Math.random() * 40) - 20; // -20% to +20% from center
+                const y = Math.floor(Math.random() * 40) - 20; // -20% to +20% from center
+                
+                frame.style.setProperty('--r', rotation + 'deg');
+                frame.style.left = `calc(50% + ${x}%)`;
+                frame.style.top = `calc(50% + ${y}%)`;
+                frame.style.zIndex = i;
+                
+                // Entrance animation
+                frame.style.opacity = '0';
+                frame.style.transform = `scale(0.5) rotate(${rotation}deg)`;
+
+                frame.innerHTML = `<img src="${src}">`;
+                area.appendChild(frame);
+
+                // Trigger entrance
+                setTimeout(() => {
+                    frame.style.opacity = '1';
+                    frame.style.transform = `scale(1) rotate(${rotation}deg)`;
+                }, i * 150);
+
+                // Bring to front on click
+                frame.onclick = () => {
+                    const topZ = Math.max(...Array.from(document.querySelectorAll('.photo-frame')).map(f => f.style.zIndex)) + 1;
+                    frame.style.zIndex = topZ;
+                };
+            });
+        }
+
+        // Init first chapter
+        scatterImages(chapters[0].imgs);
+
+        window.step = (dir) => {
+            const content = document.getElementById('content-wrapper');
+            content.style.opacity = '0';
             
             setTimeout(() => {
                 current += dir;
@@ -201,30 +236,13 @@
                 
                 document.getElementById('st-title').innerText = ch.t;
                 document.getElementById('st-body').innerHTML = ch.b;
-                document.getElementById('stat-footer').innerText = stats[current] || "";
-
-                // Layout logic
-                const count = ch.imgs.length;
-                grid.style.gridTemplateColumns = (count === 1) ? "1fr" : "1fr 1fr";
-                grid.style.maxWidth = (count === 1) ? "400px" : "600px";
-
-                for (let i = 1; i <= 4; i++) {
-                    const box = document.getElementById(`b${i}`);
-                    const img = document.getElementById(`pic${i}`);
-                    if (ch.imgs[i-1]) {
-                        img.src = ch.imgs[i-1];
-                        box.style.display = "block";
-                    } else {
-                        box.style.display = "none";
-                    }
-                }
+                
+                scatterImages(ch.imgs);
                 
                 document.getElementById('prev').style.visibility = current === 0 ? 'hidden' : 'visible';
                 document.getElementById('next').style.visibility = current === chapters.length - 1 ? 'hidden' : 'visible';
                 
-                scroll.scrollTop = 0; // Reset scroll position to top for next chapter
-                wrapper.classList.remove('fade-out');
-                grid.style.opacity = "1";
+                content.style.opacity = '1';
             }, 500);
         };
     </script>
