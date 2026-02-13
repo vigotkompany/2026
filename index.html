@@ -14,9 +14,9 @@
             --tape-color: rgba(210, 194, 164, 0.4);
         }
 
-        body, html { margin: 0; padding: 0; background: var(--parchment); height: 100vh; font-family: 'MedievalSharp', serif; overflow: hidden; }
+        body, html { margin: 0; padding: 0; background: var(--parchment); height: 100vh; font-family: 'MedievalSharp', serif; overflow: hidden; touch-action: none; }
         
-        #cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--royal-red); color: white; z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1); }
+        #cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--royal-red); color: white; z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1); }
         .hide-cover { transform: translateY(-100%); pointer-events: none; }
         
         .title { font-family: 'Cinzel Decorative', serif; font-size: clamp(2rem, 6vw, 3.5rem); color: var(--gold); margin: 10px; }
@@ -35,70 +35,54 @@
             padding: 30px 20px 10px;
             text-align: center;
             z-index: 10;
-            box-sizing: border-box;
             background: linear-gradient(to bottom, var(--parchment) 80%, transparent);
+            pointer-events: none; /* Allows dragging photos "under" the text area */
         }
+        .text-section * { pointer-events: auto; }
         
         .drop-cap { font-family: 'Cinzel Decorative'; font-size: 3.5rem; color: var(--royal-red); float: left; line-height: 0.7; margin-right: 12px; }
         h2 { font-family: 'Cinzel Decorative'; color: var(--royal-red); margin: 0 0 10px; font-size: 1.6rem; border-bottom: 2px solid var(--gold); display: inline-block; }
-        p { max-width: 600px; margin: 0 auto; line-height: 1.5; font-size: 1.05rem; }
 
-        /* SCROLLABLE AREA MOVED UP */
         #collage-area {
-            flex: 1; /* Takes up all available middle space */
+            flex: 1;
             width: 100%;
             position: relative;
-            overflow: visible; /* Allows tape/corners to peak out */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: -20px; /* Pulls images closer to the text */
+            margin-top: -30px;
         }
 
+        /* PHOTO FRAME */
         .photo-frame { 
             position: absolute;
             background: #fff;
-            padding: 12px 12px 35px 12px;
+            padding: 10px 10px 30px 10px;
             box-shadow: 5px 15px 30px rgba(0,0,0,0.15);
             border: 1px solid #eee;
-            width: clamp(160px, 35vw, 280px);
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy entrance */
+            width: clamp(160px, 30vw, 250px);
             cursor: grab;
-            animation: float 5s ease-in-out infinite alternate;
+            user-select: none;
+            touch-action: none;
+            transition: transform 0.2s ease, opacity 0.5s ease;
         }
 
-        .photo-frame:active { cursor: grabbing; transform: scale(1.05); }
+        .photo-frame:active { cursor: grabbing; transform: scale(1.05) !important; box-shadow: 10px 25px 40px rgba(0,0,0,0.2); }
 
-        /* Washi Tape Effect */
         .photo-frame::before {
             content: "";
             position: absolute;
-            top: -12px;
+            top: -10px;
             left: 50%;
             transform: translateX(-50%) rotate(2deg);
-            width: 90px;
-            height: 30px;
+            width: 70px;
+            height: 25px;
             background: var(--tape-color);
-            border-left: 2px dotted rgba(0,0,0,0.1);
-            border-right: 2px dotted rgba(0,0,0,0.1);
+            border-left: 1px dotted rgba(0,0,0,0.1);
+            border-right: 1px dotted rgba(0,0,0,0.1);
         }
 
-        .photo-frame img { 
-            width: 100%; 
-            height: auto;
-            display: block;
-            pointer-events: none;
-            filter: sepia(0.1); /* Slight vintage touch */
-        }
+        .photo-frame img { width: 100%; height: auto; display: block; pointer-events: none; }
 
-        @keyframes float {
-            0% { transform: translateY(0) rotate(var(--r)); }
-            100% { transform: translateY(-15px) rotate(calc(var(--r) + 2deg)); }
-        }
-
-        /* Nav wrapper stays at the very bottom */
         .nav-wrapper {
-            padding: 25px 0;
+            padding: 20px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -107,7 +91,7 @@
         }
 
         .nav-bar { display: flex; gap: 50px; font-family: 'Cinzel Decorative'; color: #ae9656; font-weight: bold; }
-        .nav-bar span { cursor: pointer; padding: 10px; font-size: 1rem; }
+        .nav-bar span { cursor: pointer; padding: 10px; }
         #stat-footer { font-size: 0.75rem; color: #888; margin-top: 5px; text-transform: uppercase; letter-spacing: 3px; }
 
         #yes-btn { padding: 15px 70px; font-size: 1.5rem; cursor: pointer; background: white; color: var(--royal-red); border: none; border-radius: 50px; font-weight: bold; font-family: 'Cinzel Decorative'; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
@@ -133,8 +117,7 @@
             </div>
         </div>
 
-        <div id="collage-area">
-            </div>
+        <div id="collage-area"></div>
 
         <div class="nav-wrapper">
             <div class="nav-bar">
@@ -147,11 +130,12 @@
 
     <script>
         let current = 0;
+        let highestZ = 10;
+        
         const chapters = [
-            { t: "The Closing Rank", b: "<p><span class='drop-cap'>O</span>nce, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>", imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"] },
-            { t: "The Barista 'Non-Date'", b: "<p><span class='drop-cap'>I</span>n Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>", imgs: ["https://images.unsplash.com/photo-1541167760496-162955ed8a9f?w=600", "https://images.unsplash.com/photo-1601050690597-df056fb36792?w=600"] },
-            { t: "The Hillside Proposal", b: "<p><span class='drop-cap'>G</span>anesh Chaturthi 2018. Recreating 'Om Shanti Oshana' at the TV Tower hill—in 35° heat and slippers!</p>", imgs: ["https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600"] },
-            { t: "The Wedding 2025", b: "<p><span class='drop-cap'>W</span>e traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany.</p>", imgs: ["https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600", "https://images.unsplash.com/photo-1519741497674-611481863552?w=600"] }
+            { t: "The Closing Rank", b: "<p>Once, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>", imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"] },
+            { t: "The Barista 'Non-Date'", b: "<p>In Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>", imgs: ["https://images.unsplash.com/photo-1541167760496-162955ed8a9f?w=600", "https://images.unsplash.com/photo-1601050690597-df056fb36792?w=600"] },
+            { t: "The Hillside Proposal", b: "<p>Ganesh Chaturthi 2018. Recreating 'Om Shanti Oshana' at the TV Tower hill—in 35° heat and slippers!</p>", imgs: ["https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600"] }
         ];
 
         window.go = () => document.getElementById('cover').classList.add('hide-cover');
@@ -169,51 +153,69 @@
                 const frame = document.createElement('div');
                 frame.className = 'photo-frame';
                 
-                const rotation = Math.floor(Math.random() * 24) - 12; 
-                // Focused scattering closer to center/top
-                const x = Math.floor(Math.random() * 50) - 25; 
-                const y = Math.floor(Math.random() * 30) - 25; // Negative Y pulls it UP
-                
-                frame.style.setProperty('--r', rotation + 'deg');
-                frame.style.left = `calc(50% + ${x}%)`;
-                frame.style.top = `calc(50% + ${y}%)`;
-                frame.style.zIndex = i;
-                
+                // Controlled spread to prevent perfect overlaps
+                const rotation = Math.floor(Math.random() * 20) - 10;
+                const spreadX = (i % 2 === 0 ? -1 : 1) * (15 + Math.random() * 20);
+                const spreadY = (i < 2 ? -1 : 1) * (10 + Math.random() * 15);
+
+                frame.style.left = `calc(50% + ${spreadX}%)`;
+                frame.style.top = `calc(40% + ${spreadY}%)`;
+                frame.style.transform = `rotate(${rotation}deg) scale(0.5)`;
                 frame.style.opacity = '0';
-                frame.style.transform = `scale(0.2) rotate(${rotation}deg)`;
+                frame.style.zIndex = i + 1;
 
                 frame.innerHTML = `<img src="${src}">`;
                 area.appendChild(frame);
 
+                // Drag Logic
+                let isDragging = false;
+                let startX, startY, initialLeft, initialTop;
+
+                const start = (e) => {
+                    isDragging = true;
+                    frame.style.zIndex = ++highestZ;
+                    const touch = e.type === 'touchstart' ? e.touches[0] : e;
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+                    initialLeft = frame.offsetLeft;
+                    initialTop = frame.offsetTop;
+                };
+
+                const move = (e) => {
+                    if (!isDragging) return;
+                    const touch = e.type === 'touchmove' ? e.touches[0] : e;
+                    const dx = touch.clientX - startX;
+                    const dy = touch.clientY - startY;
+                    frame.style.left = (initialLeft + dx) + 'px';
+                    frame.style.top = (initialTop + dy) + 'px';
+                };
+
+                const stop = () => isDragging = false;
+
+                frame.addEventListener('mousedown', start);
+                frame.addEventListener('touchstart', start);
+                window.addEventListener('mousemove', move);
+                window.addEventListener('touchmove', move);
+                window.addEventListener('mouseup', stop);
+                window.addEventListener('touchend', stop);
+
                 setTimeout(() => {
                     frame.style.opacity = '1';
-                    frame.style.transform = `scale(1) rotate(${rotation}deg)`;
-                }, i * 120);
-
-                frame.onclick = () => {
-                    const frames = document.querySelectorAll('.photo-frame');
-                    const topZ = Math.max(...Array.from(frames).map(f => parseInt(f.style.zIndex) || 0)) + 1;
-                    frame.style.zIndex = topZ;
-                };
+                    frame.style.transform = `rotate(${rotation}deg) scale(1)`;
+                }, i * 100);
             });
         }
 
         scatterImages(chapters[0].imgs);
 
         window.step = (dir) => {
-            const content = document.getElementById('content-wrapper');
-            content.style.opacity = '0';
-            
-            setTimeout(() => {
-                current += dir;
-                const ch = chapters[current];
-                document.getElementById('st-title').innerText = ch.t;
-                document.getElementById('st-body').innerHTML = ch.b;
-                scatterImages(ch.imgs);
-                document.getElementById('prev').style.visibility = current === 0 ? 'hidden' : 'visible';
-                document.getElementById('next').style.visibility = current === chapters.length - 1 ? 'hidden' : 'visible';
-                content.style.opacity = '1';
-            }, 400);
+            current += dir;
+            const ch = chapters[current];
+            document.getElementById('st-title').innerText = ch.t;
+            document.getElementById('st-body').innerHTML = ch.b;
+            scatterImages(ch.imgs);
+            document.getElementById('prev').style.visibility = current === 0 ? 'hidden' : 'visible';
+            document.getElementById('next').style.visibility = current === chapters.length - 1 ? 'hidden' : 'visible';
         };
     </script>
 </body>
