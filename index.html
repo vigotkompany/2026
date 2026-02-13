@@ -27,22 +27,28 @@
 
         #story-container { width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; text-align: center; }
         
-        .text-section { max-width: 600px; min-height: 220px; margin-top: 20px; transition: all 0.5s ease; }
+        .text-section { max-width: 600px; min-height: 200px; margin-top: 20px; transition: all 0.5s ease; }
         .fade-out { opacity: 0; transform: translateY(10px); }
         
         .drop-cap { font-family: 'Cinzel Decorative'; font-size: 4rem; color: var(--royal-red); float: left; line-height: 0.7; margin-right: 12px; margin-top: 8px; }
         h2 { font-family: 'Cinzel Decorative'; color: var(--royal-red); margin: 15px 0; font-size: 1.6rem; border-bottom: 2px solid var(--gold); display: inline-block; }
         
-        .images { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 500px; margin-top: 20px; }
-        .box { background: white; aspect-ratio: 1; border: 6px solid white; box-shadow: 0 10px 20px rgba(0,0,0,0.1); overflow: hidden; border-radius: 4px; }
+        /* Grid styling */
+        .images { 
+            display: grid; 
+            gap: 15px; 
+            width: 100%; 
+            max-width: 500px; 
+            margin-top: 20px; 
+            transition: all 0.5s ease;
+        }
+        .box { background: white; aspect-ratio: 1.2; border: 4px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow: hidden; border-radius: 4px; }
         .box img { width: 100%; height: 100%; object-fit: cover; }
 
         .nav-bar { margin-top: auto; padding-bottom: 20px; display: flex; gap: 40px; font-family: 'Cinzel Decorative'; color: #ae9656; font-weight: bold; }
         .nav-bar span { cursor: pointer; padding: 10px; }
 
-        /* Joke Footer */
         #stat-footer { font-size: 0.8rem; color: #888; margin-bottom: 10px; font-family: sans-serif; text-transform: uppercase; letter-spacing: 1px; }
-        
         .valentine-text { font-family: 'Great Vibes', cursive; font-size: 3.5rem; color: var(--royal-red); margin-top: 15px; }
     </style>
 </head>
@@ -67,11 +73,11 @@
             </div>
         </div>
 
-        <div class="images">
-            <div class="box"><img id="pic1" src="1.jpeg"></div>
-            <div class="box"><img id="pic2" src="2.jpeg"></div>
-            <div class="box"><img id="pic2" src="3.jpeg"></div>
-            <div class="box"><img id="pic2" src="4.jpeg"></div>
+        <div class="images" id="image-grid">
+            <div class="box" id="b1"><img id="pic1" src="1.jpeg"></div>
+            <div class="box" id="b2"><img id="pic2" src="2.jpeg"></div>
+            <div class="box" id="b3"><img id="pic3" src="3.jpeg"></div>
+            <div class="box" id="b4"><img id="pic4" src="4.jpeg"></div>
         </div>
 
         <div class="nav-bar">
@@ -108,12 +114,36 @@
         ];
 
         const chapters = [
-            { t: "The Closing Rank", b: "<p><span class='drop-cap'>O</span>nce, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In the middle of a chaotic FS lab, you passed me your notes—unaware that it was the start of #(NOT)VIMAL. Who knew a lab record would lead to this? (Spoiler: I did.)</p>", i1: "https://i.imgur.com/7S8V2mX.png", i2: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500" },
-            { t: "The Barista 'Non-Date'", b: "<p><span class='drop-cap'>I</span>n Nov 2017, we met at Barista for a 'treat.' We shared more than just Samosa Chat—there were blushes, laughs, and a spark neither of us could hide. It was followed by brain-freezing Krushers. You paid, right? Good.</p>", i1: "https://images.unsplash.com/photo-1601050690597-df056fb36792?w=500", i2: "https://images.unsplash.com/photo-1541167760496-162955ed8a9f?w=500" },
-            { t: "The Hillside Proposal", b: "<p><span class='drop-cap'>O</span>n Ganesh Chaturthi 2018, you channeled your inner Nivin Pauly. Recreating 'Om Shanti Oshana' at the TV Tower hill—in 35° heat and slippers! You finally held my hand. I only took it because I was afraid I’d trip, but I’m glad I did.</p>", i1: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500", i2: "https://images.unsplash.com/photo-1516589174184-e6646f654862?w=500" },
-            { t: "Dublin & Sitcoms", b: "<p><span class='drop-cap'>F</span>rom COVID lockdowns to the long miles of LDR, we survived on 'The Office' and long-distance therapy sessions (aka our fights). I found a HOME in you, even if your WiFi connection was sometimes questionable.</p>", i1: "https://images.unsplash.com/photo-1522158673245-f00de76db0ad?w=500", i2: "https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?w=500" },
-            { t: "The Wedding 2025", b: "<p><span class='drop-cap'>W</span>e traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany. You’ve officially signed up to catch this clumsy, spoilt brat for the next 7 lifetimes. No refunds. No exchanges.</p>", i1: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500", i2: "https://images.unsplash.com/photo-1519741497674-611481863552?w=500" },
-            { t: "Happy Valentine's Day", b: "<div class='valentine-text'>I Love You, V!</div><p style='margin-top:10px;'>To my favorite person: Here’s to our madness. I’m so deeply in love with you! (P.S. You're still the Dwight to my Angela. Or the Jim to my Pam. Actually, just be the Vipin to my Komal.)</p>", i1: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500", i2: "https://images.unsplash.com/photo-1516589174184-e6646f654862?w=500" }
+            { 
+                t: "The Closing Rank", 
+                b: "<p><span class='drop-cap'>O</span>nce, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In the middle of a chaotic FS lab, you passed me your notes—unaware that it was the start of #(NOT)VIMAL. Who knew a lab record would lead to this?</p>", 
+                imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"] 
+            },
+            { 
+                t: "The Barista 'Non-Date'", 
+                b: "<p><span class='drop-cap'>I</span>n Nov 2017, we met at Barista for a 'treat.' We shared more than just Samosa Chat—there were blushes, laughs, and a spark neither of us could hide.</p>", 
+                imgs: ["https://images.unsplash.com/photo-1541167760496-162955ed8a9f?w=500", "https://images.unsplash.com/photo-1601050690597-df056fb36792?w=500"] 
+            },
+            { 
+                t: "The Hillside Proposal", 
+                b: "<p><span class='drop-cap'>O</span>n Ganesh Chaturthi 2018, you channeled your inner Nivin Pauly. Recreating 'Om Shanti Oshana' at the TV Tower hill—in 35° heat and slippers!</p>", 
+                imgs: ["https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500"] 
+            },
+            { 
+                t: "Dublin & Sitcoms", 
+                b: "<p><span class='drop-cap'>F</span>rom COVID lockdowns to the long miles of LDR, we survived on 'The Office' and long-distance therapy sessions. I found a HOME in you.</p>", 
+                imgs: ["https://images.unsplash.com/photo-1522158673245-f00de76db0ad?w=500", "https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?w=500"] 
+            },
+            { 
+                t: "The Wedding 2025", 
+                b: "<p><span class='drop-cap'>W</span>e traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany. No refunds. No exchanges.</p>", 
+                imgs: ["https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500", "https://images.unsplash.com/photo-1519741497674-611481863552?w=500", "https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=500"] 
+            },
+            { 
+                t: "Happy Valentine's Day", 
+                b: "<div class='valentine-text'>I Love You, V!</div><p style='margin-top:10px;'>To my favorite person: Here’s to our madness. I’m so deeply in love with you!</p>", 
+                imgs: ["https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500"] 
+            }
         ];
 
         window.go = function() {
@@ -140,21 +170,42 @@
 
         window.step = function(dir) {
             const wrapper = document.getElementById('content-wrapper');
+            const grid = document.getElementById('image-grid');
             wrapper.classList.add('fade-out');
+            grid.style.opacity = "0";
             
             setTimeout(() => {
                 current += dir;
                 const ch = chapters[current];
+                
+                // Update Text
                 document.getElementById('st-title').innerText = ch.t;
                 document.getElementById('st-body').innerHTML = ch.b;
-                document.getElementById('pic1').src = ch.i1;
-                document.getElementById('pic2').src = ch.i2;
                 document.getElementById('stat-footer').innerText = stats[current];
+
+                // Update Grid Layout based on image count
+                const count = ch.imgs.length;
+                if (count === 1) grid.style.gridTemplateColumns = "1fr";
+                else if (count === 2) grid.style.gridTemplateColumns = "1fr 1fr";
+                else grid.style.gridTemplateColumns = "1fr 1fr";
+
+                // Update Images
+                for (let i = 1; i <= 4; i++) {
+                    const box = document.getElementById(`b${i}`);
+                    const img = document.getElementById(`pic${i}`);
+                    if (ch.imgs[i-1]) {
+                        img.src = ch.imgs[i-1];
+                        box.style.display = "block";
+                    } else {
+                        box.style.display = "none";
+                    }
+                }
                 
                 document.getElementById('prev').style.visibility = current === 0 ? 'hidden' : 'visible';
                 document.getElementById('next').style.visibility = current === chapters.length - 1 ? 'hidden' : 'visible';
                 
                 wrapper.classList.remove('fade-out');
+                grid.style.opacity = "1";
             }, 500);
         };
     </script>
