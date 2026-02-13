@@ -18,44 +18,68 @@
         #cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--royal-red); color: white; z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1); }
         .hide-cover { transform: translateY(-100%); pointer-events: none; }
         
-        .title { font-family: 'Cinzel Decorative', serif; font-size: clamp(2.2rem, 8vw, 3.8rem); color: var(--gold); margin: 10px; }
-        #guilt-trip { height: 70px; color: var(--gold); margin-bottom: 20px; font-size: 1.2rem; font-style: italic; max-width: 80%; }
+        .title { font-family: 'Cinzel Decorative', serif; font-size: clamp(2rem, 6vw, 3rem); color: var(--gold); margin: 10px; }
+        #guilt-trip { height: 60px; color: var(--gold); margin-bottom: 20px; font-size: 1.1rem; font-style: italic; max-width: 80%; }
 
-        .btn-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 250px; position: relative; }
-        #yes-btn { padding: 18px 70px; font-size: 1.5rem; cursor: pointer; background: white; color: var(--royal-red); border: none; border-radius: 50px; font-weight: bold; z-index: 1200; font-family: 'Cinzel Decorative'; box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        #no-btn { position: fixed; padding: 10px 30px; cursor: pointer; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.5); border-radius: 50px; z-index: 1100; transition: all 0.2s ease; top: 65%; left: 70%; }
+        .btn-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 200px; position: relative; }
+        #yes-btn { padding: 15px 60px; font-size: 1.3rem; cursor: pointer; background: white; color: var(--royal-red); border: none; border-radius: 50px; font-weight: bold; z-index: 1200; font-family: 'Cinzel Decorative'; box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #no-btn { position: fixed; padding: 8px 25px; cursor: pointer; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.5); border-radius: 50px; z-index: 1100; transition: all 0.2s ease; top: 65%; left: 70%; }
 
-        #story-container { width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; text-align: center; }
+        #story-container { 
+            width: 100%; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: space-between; /* Distributes space */
+            padding: 15px; 
+            box-sizing: border-box; 
+            text-align: center; 
+        }
         
-        .text-section { max-width: 600px; min-height: 200px; margin-top: 20px; transition: all 0.5s ease; }
+        .text-section { 
+            max-width: 600px; 
+            flex-shrink: 0; /* Prevents text from squishing */
+            margin-top: 10px;
+            transition: all 0.5s ease; 
+        }
         .fade-out { opacity: 0; transform: translateY(10px); }
         
-        .drop-cap { font-family: 'Cinzel Decorative'; font-size: 4rem; color: var(--royal-red); float: left; line-height: 0.7; margin-right: 12px; margin-top: 8px; }
-        h2 { font-family: 'Cinzel Decorative'; color: var(--royal-red); margin: 15px 0; font-size: 1.6rem; border-bottom: 2px solid var(--gold); display: inline-block; }
-        
-        /* Grid styling */
+        .drop-cap { font-family: 'Cinzel Decorative'; font-size: 3rem; color: var(--royal-red); float: left; line-height: 0.8; margin-right: 10px; margin-top: 5px; }
+        h2 { font-family: 'Cinzel Decorative'; color: var(--royal-red); margin: 10px 0; font-size: 1.4rem; border-bottom: 2px solid var(--gold); display: inline-block; }
+        p { font-size: 0.95rem; line-height: 1.4; margin: 5px 0; }
+
+        /* Grid styling optimized for space */
         .images { 
             display: grid; 
-            gap: 15px; 
+            gap: 10px; 
             width: 100%; 
-            max-width: 500px; 
-            margin-top: 20px; 
+            max-width: 450px; 
+            max-height: 40vh; /* Limits height to 40% of screen */
+            margin: 10px auto;
             transition: all 0.5s ease;
         }
-        .box { background: white; aspect-ratio: 1.2; border: 4px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow: hidden; border-radius: 4px; }
+        .box { 
+            background: white; 
+            border: 3px solid white; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+            overflow: hidden; 
+            border-radius: 4px; 
+            aspect-ratio: 16/10; /* More horizontal to save vertical space */
+        }
         .box img { width: 100%; height: 100%; object-fit: cover; }
 
-        .nav-bar { margin-top: auto; padding-bottom: 20px; display: flex; gap: 40px; font-family: 'Cinzel Decorative'; color: #ae9656; font-weight: bold; }
-        .nav-bar span { cursor: pointer; padding: 10px; }
+        .nav-bar { padding-bottom: 10px; display: flex; gap: 40px; font-family: 'Cinzel Decorative'; color: #ae9656; font-weight: bold; font-size: 0.9rem; }
+        .nav-bar span { cursor: pointer; padding: 5px; }
 
-        #stat-footer { font-size: 0.8rem; color: #888; margin-bottom: 10px; font-family: sans-serif; text-transform: uppercase; letter-spacing: 1px; }
-        .valentine-text { font-family: 'Great Vibes', cursive; font-size: 3.5rem; color: var(--royal-red); margin-top: 15px; }
+        #stat-footer { font-size: 0.7rem; color: #888; margin-bottom: 5px; font-family: sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+        .valentine-text { font-family: 'Great Vibes', cursive; font-size: 2.8rem; color: var(--royal-red); margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div id="cover">
-        <div style="font-family: 'Great Vibes'; font-size: 2.5rem; color: var(--gold);">The Chronicles of #ViGotKOMpany</div>
+        <div style="font-family: 'Great Vibes'; font-size: 2rem; color: var(--gold);">The Chronicles of #ViGotKOMpany</div>
         <h1 class="title">Will You Enter?</h1>
         <div id="guilt-trip">Click YES to begin our epic saga...</div>
 
@@ -80,12 +104,13 @@
             <div class="box" id="b4"><img id="pic4" src="4.jpeg"></div>
         </div>
 
-        <div class="nav-bar">
-            <span id="prev" style="visibility:hidden" onclick="window.step(-1)">↞ REGRET</span>
-            <span id="next" onclick="window.step(1)">NEXT CHAOS ➔</span>
+        <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+            <div class="nav-bar">
+                <span id="prev" style="visibility:hidden" onclick="window.step(-1)">↞ REGRET</span>
+                <span id="next" onclick="window.step(1)">NEXT CHAOS ➔</span>
+            </div>
+            <div id="stat-footer">Current Status: Lab Partners 🧬</div>
         </div>
-        
-        <div id="stat-footer">Current Status: Lab Partners 🧬</div>
     </div>
 
     <script>
@@ -95,12 +120,8 @@
 
         const trips = [
             "Are you really choosing 'NO' over Krushers? 🥤",
-            "Warning: Clicking 'NO' deletes all Podi Dosa memories. ☕",
+            "Warning: Clicking 'NO' deletes Podi Dosa memories. ☕",
             "Dublin is -2°C. You need my warmth. Click YES. ❄️",
-            "Do you know how long it took to straighten my hair? 💇‍♀️",
-            "If you click NO, I'm telling everyone you prefer Biryani over me. 🍛",
-            "The crocodiles are watching. Behave. 🐊",
-            "Error 404: 'No' option not found in this relationship. 🚫",
             "Click YES or I'll start another fight about 'The Office' 📺"
         ];
 
@@ -116,32 +137,27 @@
         const chapters = [
             { 
                 t: "The Closing Rank", 
-                b: "<p><span class='drop-cap'>O</span>nce, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In the middle of a chaotic FS lab, you passed me your notes—unaware that it was the start of #(NOT)VIMAL. Who knew a lab record would lead to this?</p>", 
+                b: "<p><span class='drop-cap'>O</span>nce, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>", 
                 imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"] 
             },
             { 
                 t: "The Barista 'Non-Date'", 
-                b: "<p><span class='drop-cap'>I</span>n Nov 2017, we met at Barista for a 'treat.' We shared more than just Samosa Chat—there were blushes, laughs, and a spark neither of us could hide.</p>", 
+                b: "<p><span class='drop-cap'>I</span>n Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>", 
                 imgs: ["https://images.unsplash.com/photo-1541167760496-162955ed8a9f?w=500", "https://images.unsplash.com/photo-1601050690597-df056fb36792?w=500"] 
             },
             { 
                 t: "The Hillside Proposal", 
-                b: "<p><span class='drop-cap'>O</span>n Ganesh Chaturthi 2018, you channeled your inner Nivin Pauly. Recreating 'Om Shanti Oshana' at the TV Tower hill—in 35° heat and slippers!</p>", 
+                b: "<p><span class='drop-cap'>G</span>anesh Chaturthi 2018. Recreating 'Om Shanti Oshana' at the TV Tower hill—in 35° heat and slippers! You finally held my hand.</p>", 
                 imgs: ["https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500"] 
-            },
-            { 
-                t: "Dublin & Sitcoms", 
-                b: "<p><span class='drop-cap'>F</span>rom COVID lockdowns to the long miles of LDR, we survived on 'The Office' and long-distance therapy sessions. I found a HOME in you.</p>", 
-                imgs: ["https://images.unsplash.com/photo-1522158673245-f00de76db0ad?w=500", "https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?w=500"] 
             },
             { 
                 t: "The Wedding 2025", 
                 b: "<p><span class='drop-cap'>W</span>e traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany. No refunds. No exchanges.</p>", 
-                imgs: ["https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500", "https://images.unsplash.com/photo-1519741497674-611481863552?w=500", "https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=500"] 
+                imgs: ["https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500", "https://images.unsplash.com/photo-1519741497674-611481863552?w=500"] 
             },
             { 
                 t: "Happy Valentine's Day", 
-                b: "<div class='valentine-text'>I Love You, V!</div><p style='margin-top:10px;'>To my favorite person: Here’s to our madness. I’m so deeply in love with you!</p>", 
+                b: "<div class='valentine-text'>I Love You, V!</div><p>To my favorite person: Here’s to our madness.</p>", 
                 imgs: ["https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500"] 
             }
         ];
@@ -152,8 +168,8 @@
 
         window.dance = function() {
             const no = document.getElementById('no-btn');
-            no.style.left = Math.random() * 80 + 10 + "%";
-            no.style.top = Math.random() * 60 + 20 + "%";
+            no.style.left = Math.random() * 70 + 15 + "%";
+            no.style.top = Math.random() * 50 + 25 + "%";
         };
 
         window.noGuilt = function() {
@@ -161,8 +177,8 @@
             const yes = document.getElementById('yes-btn');
             msg.innerText = trips[tIdx % trips.length];
             tIdx++;
-            if (yesScale < 3.5) {
-                yesScale += 0.3;
+            if (yesScale < 2.5) {
+                yesScale += 0.2;
                 yes.style.transform = `scale(${yesScale})`;
             }
             window.dance();
@@ -178,18 +194,19 @@
                 current += dir;
                 const ch = chapters[current];
                 
-                // Update Text
                 document.getElementById('st-title').innerText = ch.t;
                 document.getElementById('st-body').innerHTML = ch.b;
                 document.getElementById('stat-footer').innerText = stats[current];
 
-                // Update Grid Layout based on image count
                 const count = ch.imgs.length;
-                if (count === 1) grid.style.gridTemplateColumns = "1fr";
-                else if (count === 2) grid.style.gridTemplateColumns = "1fr 1fr";
-                else grid.style.gridTemplateColumns = "1fr 1fr";
+                if (count === 1) {
+                    grid.style.gridTemplateColumns = "1fr";
+                    grid.style.maxWidth = "300px"; // Keep single image from being too huge
+                } else {
+                    grid.style.gridTemplateColumns = "1fr 1fr";
+                    grid.style.maxWidth = "450px";
+                }
 
-                // Update Images
                 for (let i = 1; i <= 4; i++) {
                     const box = document.getElementById(`b${i}`);
                     const img = document.getElementById(`pic${i}`);
