@@ -15,14 +15,16 @@
             --breezy: cubic-bezier(0.645, 0.045, 0.355, 1);
         }
 
-        /* SMOOTH 🫰 CURSOR */
+        /* 🫰 MASTER CURSOR FORCE (Fixed for links/buttons) */
+        *, body, html, a, button, span { 
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:24px'><text y='24'>🫰</text></svg>") 16 16, auto !important;
+        }
+
         body, html { 
             margin: 0; padding: 0; background: #0a0101; 
             height: 100vh; width: 100vw;
             display: flex; justify-content: center; align-items: center;
             overflow: hidden; font-family: 'MedievalSharp', serif;
-            /* Using a smaller SVG for better performance/smoothness */
-            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:24px'><text y='24'>🫰</text></svg>") 16 16, auto;
             touch-action: none;
         }
 
@@ -30,10 +32,15 @@
             width: 90vw; height: 85vh; max-width: 1100px;
             perspective: 3000px;
             position: relative;
-            z-index: 1;
         }
 
-        /* FRONT COVER - High Z-Index until opened */
+        #book {
+            width: 100%; height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        /* COVERS */
         .book-cover {
             position: absolute; width: 100%; height: 100%;
             background-color: var(--royal-red); background-image: var(--leather);
@@ -41,11 +48,31 @@
             justify-content: center; align-items: center; text-align: center;
             transform-origin: left; transition: transform 1.5s var(--breezy), opacity 0.5s;
             border-left: 15px solid #280202; border-radius: 5px 25px 25px 5px;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+            backface-visibility: hidden;
         }
         .cover-open { transform: rotateY(-145deg); pointer-events: none; opacity: 0; visibility: hidden; }
 
-        /* FINAL PAGE - Stays hidden until the end */
+        /* THE COVER BORDER & NO BUTTON */
+        .cover-border { 
+            border: 4px double var(--gold); 
+            padding: 50px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            position: relative;
+        }
+
+        #no-btn {
+            position: absolute;
+            background: transparent;
+            color: white;
+            border: 1px solid var(--gold);
+            padding: 8px 20px;
+            border-radius: 20px;
+            z-index: 5100; /* Above the cover border */
+            transition: top 0.2s, left 0.2s;
+        }
+
         #final-page {
             position: absolute; width: 100%; height: 100%;
             background-color: var(--royal-red); background-image: var(--leather);
@@ -54,89 +81,81 @@
             border-radius: 5px 25px 25px 5px;
         }
 
-        /* THE ALBUM BASE */
+        /* ALBUM */
         #album-content {
             width: 100%; height: 100%;
             position: relative; display: none; background: #1a1a1a;
             border-radius: 5px 25px 25px 5px; box-shadow: 0 50px 100px rgba(0,0,0,0.9);
+            transform-style: preserve-3d;
         }
 
         .page { 
             width: 50%; height: 100%; position: absolute; top: 0; padding: 50px; box-sizing: border-box; 
             background: var(--parchment); z-index: 10;
+            backface-visibility: hidden;
         }
         .left-page { left: 0; border-radius: 5px 0 0 5px; border-right: 1px solid rgba(0,0,0,0.1); }
         .right-page { right: 0; border-radius: 0 5px 5px 0; overflow: hidden; }
 
-        /* PHOTO FRAMES - Optimized CSS */
         .photo-frame {
             position: absolute; background: #fff; padding: 10px 10px 35px 10px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.3); width: 170px;
-            opacity: 0; transform: scale(0.8) translateY(30px);
-            transition: opacity 1s var(--breezy), transform 1s var(--breezy);
-            z-index: 20; pointer-events: auto;
+            opacity: 0; transform: scale(0.8);
+            transition: opacity 0.8s var(--breezy), transform 0.8s var(--breezy);
+            z-index: 20;
         }
-        .photo-frame.visible { opacity: 1; transform: scale(1) rotate(var(--r)) translateY(0); }
-        .photo-frame img { width: 100%; height: auto; display: block; pointer-events: none; }
+        .photo-frame.visible { opacity: 1; transform: scale(1) rotate(var(--r)); }
 
-        /* THE TURNER - Lower Z-Index than Nav */
         #page-turner { 
             position: absolute; right: 0; width: 50%; height: 100%; top: 0; 
             background: var(--parchment); transform-origin: left; 
             transition: transform 1s var(--breezy); z-index: 400; visibility: hidden; 
+            backface-visibility: hidden; transform-style: preserve-3d;
         }
         .turning { visibility: visible !important; transform: rotateY(-180deg); }
 
-        /* NAVIGATION - MASTER TOP LAYER */
+        /* NAV UI */
         .nav-controls { 
             position: absolute; bottom: 30px; width: 100%; 
             display: none; justify-content: center; gap: 100px; 
-            z-index: 9999; /* Forces buttons to the absolute top */
-            pointer-events: none; /* Container doesn't block clicks */
+            z-index: 9999; pointer-events: none;
         }
         .nav-controls span { 
-            pointer-events: auto; /* Buttons themselves ARE clickable */
-            background: white; padding: 12px 35px; border-radius: 40px; 
-            font-family: 'Cinzel Decorative'; font-weight: bold; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4); color: var(--royal-red); 
-            transition: 0.3s; cursor: pointer !important;
-        }
-        .nav-controls span:hover { transform: scale(1.1); background: var(--gold); color: black; }
-
-        #yes-btn, #replay-btn { 
-            background: var(--gold); color: black; padding: 15px 45px; 
-            font-family: 'Cinzel Decorative'; font-weight: bold; border: none; 
-            cursor: pointer !important; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            pointer-events: auto; background: white; padding: 12px 35px; border-radius: 40px; 
+            font-family: 'Cinzel Decorative'; font-weight: bold; color: var(--royal-red); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
         }
     </style>
 </head>
 <body>
 
     <div id="book-container">
-        <div id="book-cover" class="book-cover">
-            <div style="border: 4px double var(--gold); padding: 50px; display: flex; flex-direction: column; align-items: center;">
-                <div style="font-family: 'Great Vibes'; font-size: 3rem; color: var(--gold);">The Chronicles of</div>
-                <h1 style="font-family: 'Cinzel Decorative'; font-size: 4rem; margin: 20px 0; color: var(--gold);">#ViGotKOMpany</h1>
-                <button id="yes-btn" onclick="openSaga()">OPEN SAGA</button>
+        <div id="book">
+            <div id="book-cover" class="book-cover">
+                <div class="cover-border">
+                    <div style="font-family: 'Great Vibes'; font-size: 3rem; color: var(--gold);">The Chronicles of</div>
+                    <h1 style="font-family: 'Cinzel Decorative'; font-size: 4rem; margin: 20px 0; color: var(--gold);">#ViGotKOMpany</h1>
+                    <button onclick="openSaga()" style="background:var(--gold); padding:15px 45px; font-family:'Cinzel Decorative'; font-weight:bold; border:none; margin-bottom: 20px;">OPEN SAGA</button>
+                    <button id="no-btn" onmouseover="danceNo()">NO</button>
+                </div>
             </div>
-        </div>
 
-        <div id="final-page">
-            <div style="border: 4px double var(--gold); padding: 50px; display: flex; flex-direction: column; align-items: center;">
-                <div style="font-family: 'Great Vibes'; font-size: 4rem; color: var(--gold);">And so...</div>
-                <h1 style="font-family: 'Cinzel Decorative'; font-size: 5rem; margin: 30px 0; color: var(--gold);">FOREVER BEGINS</h1>
-                <button id="replay-btn" onclick="restartSaga()">START OVER</button>
+            <div id="final-page">
+                <div style="border: 4px double var(--gold); padding: 50px; display: flex; flex-direction: column; align-items: center;">
+                    <h1 style="font-family: 'Cinzel Decorative'; font-size: 5rem; margin: 30px 0; color: var(--gold);">FOREVER BEGINS</h1>
+                    <button onclick="restartSaga()" style="background:var(--gold); padding:15px 45px; font-family:'Cinzel Decorative'; font-weight:bold; border:none;">START OVER</button>
+                </div>
             </div>
-        </div>
 
-        <div id="album-content">
-            <div style="position: absolute; left: 50%; width: 40px; height: 100%; background: linear-gradient(to right, rgba(0,0,0,0.3), rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.3)); z-index: 500; transform: translateX(-50%); pointer-events: none;"></div>
-            <div class="page left-page">
-                <h2 id="ch-title" style="color:var(--royal-red); font-family:'Cinzel Decorative'; border-bottom: 2px solid var(--gold);"></h2>
-                <div id="ch-body"></div>
+            <div id="album-content">
+                <div style="position: absolute; left: 50%; width: 40px; height: 100%; background: linear-gradient(to right, rgba(0,0,0,0.3), rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.3)); z-index: 500; transform: translateX(-50%); pointer-events: none;"></div>
+                <div class="page left-page">
+                    <h2 id="ch-title" style="color:var(--royal-red); font-family:'Cinzel Decorative'; border-bottom: 2px solid var(--gold);"></h2>
+                    <div id="ch-body"></div>
+                </div>
+                <div class="page right-page"><div id="collage-area"></div></div>
+                <div id="page-turner"></div>
             </div>
-            <div class="page right-page"><div id="collage-area"></div></div>
-            <div id="page-turner"></div>
         </div>
 
         <div class="nav-controls" id="nav-ui">
@@ -166,6 +185,14 @@
             }, 500);
         }
 
+        function danceNo() {
+            const no = document.getElementById('no-btn');
+            const x = Math.random() * 80;
+            const y = Math.random() * 80;
+            no.style.left = x + "%";
+            no.style.top = y + "%";
+        }
+
         function restartSaga() {
             current = 0;
             document.getElementById('final-page').style.display = 'none';
@@ -173,7 +200,6 @@
             cover.classList.remove('cover-open');
             cover.style.opacity = "1";
             cover.style.visibility = "visible";
-            cover.style.pointerEvents = "auto";
             document.getElementById('album-content').style.display = 'none';
             document.getElementById('nav-ui').style.display = 'none';
         }
@@ -210,12 +236,10 @@
             }
             const turner = document.getElementById('page-turner');
             turner.classList.add('turning');
-            
             setTimeout(() => {
                 current += dir;
                 updatePage();
             }, 500);
-
             setTimeout(() => {
                 turner.classList.remove('turning');
             }, 1050);
