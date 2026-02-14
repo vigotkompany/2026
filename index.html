@@ -72,7 +72,13 @@
             opacity: 0; transform: scale(0.5);
             transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .photo-frame img { width: 100%; height: auto; pointer-events: none; display: block; }
+        .photo-frame img { 
+            width: 100%; 
+            height: auto; 
+            pointer-events: none; /* Crucial: clicks go through the image to the frame */
+            display: block; 
+        }
+        
         .photo-frame.visible { opacity: 1; transform: scale(1) rotate(var(--r)); }
 
         /* PAGE TURN OVERLAY (Sync Fix) */
@@ -211,26 +217,63 @@
         }
 
         function attachDrag(el) {
-            let isDragging = false, startX, startY, initX, initY;
-
-            const start = (e) => {
-                isDragging = true;
-                el.style.zIndex = ++zCounter;
-                const t = e.touches ? e.touches[0] : e;
-                startX = t.clientX; startY = t.clientY;
-                initX = el.offsetLeft; initY = el.offsetTop;
+            let isDragging = false;
+            let startX, startY, initX, initY;
+        
+            // Helper to handle both Mouse and Touch
+            const getCoords = (e) => {
+                return e.touches ? e.touches[0] : e;
             };
-
+        
+            const start = (e) => {
+                // Bring to front immediately on touch/click
+                zCounter++;
+                el.style.zIndex = zCounter;
+                
+                isDragging = true;
+                const coords = getCoords(e);
+                startX = coords.clientX;
+                startY = coords.clientY;
+                
+                // Get current position (handling the 'px' suffix)
+                initX = el.offsetLeft;
+                initY = el.offsetTop;
+                
+                // Add "moving" style
+                el.style.cursor = "grabbing";
+                el.style.transition = "none"; // Stop animations while dragging
+            };
+        
             const move = (e) => {
                 if (!isDragging) return;
-                const t = e.touches ? e.touches[0] : e;
-                el.style.left = (initX + (t.clientX - startX)) + "px";
-                el.style.top = (initY + (t.clientY - startY)) + "px";
+                
+                // Prevent screen scrolling while dragging on mobile
+                if (e.type === 'touchmove') e.preventDefault();
+        
+                const coords = getCoords(e);
+                const dx = coords.clientX - startX;
+                const dy = coords.clientY - startY;
+        
+                el.style.left = (initX + dx) + "px";
+                el.style.top = (initY + dy) + "px";
             };
-
-            el.onmousedown = el.ontouchstart = start;
-            window.onmousemove = window.ontouchmove = move;
-            window.onmouseup = window.ontouchend = () => isDragging = false;
+        
+            const stop = () => {
+                if (!isDragging) return;
+                isDragging = false;
+                el.style.cursor = "grab";
+                // Do NOT reset z-index here; we want it to stay on top
+            };
+        
+            // Attach listeners to the specific element (the frame)
+            el.addEventListener('mousedown', start);
+            el.addEventListener('touchstart', start, { passive: false });
+        
+            // Attach movement/stop to window so you don't "lose" the photo if you move fast
+            window.addEventListener('mousemove', move);
+            window.addEventListener('touchmove', move, { passive: false });
+            window.addEventListener('mouseup', stop);
+            window.addEventListener('touchend', stop);
         }
     </script>
 </body>
