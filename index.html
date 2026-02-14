@@ -60,14 +60,12 @@
             box-shadow: 0 50px 100px rgba(0,0,0,0.9);
         }
 
-        /* CENTRAL SPINE GROOVE */
         .spine-groove {
             position: absolute; left: 50%; width: 40px; height: 100%;
             background: linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.4));
             z-index: 500; transform: translateX(-50%); pointer-events: none;
         }
 
-        /* PAGES */
         .page { 
             width: 50%; height: 100%; 
             position: absolute; top: 0; padding: 50px; box-sizing: border-box; 
@@ -76,7 +74,6 @@
         .left-page { left: 0; border-radius: 5px 0 0 5px; border-right: 1px solid rgba(0,0,0,0.1); box-shadow: inset -10px 0 20px rgba(0,0,0,0.05); }
         .right-page { right: 0; border-radius: 0 5px 5px 0; overflow: hidden; box-shadow: inset 10px 0 20px rgba(0,0,0,0.05); }
 
-        /* PHOTOS */
         .photo-frame {
             position: absolute; background: #fff; padding: 8px 8px 30px 8px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2); width: 160px;
@@ -90,8 +87,9 @@
         .turning { visibility: visible !important; transform: rotateY(-180deg); }
 
         /* BUTTONS */
-        #yes-btn { background: var(--gold); color: black; padding: 15px 40px; cursor: pointer; font-family: 'Cinzel Decorative'; font-weight: bold; border: none; margin-bottom: 20px; transition: 0.3s; }
-        #yes-btn:hover { background: #fff; }
+        #yes-btn, #replay-btn { background: var(--gold); color: black; padding: 15px 40px; cursor: pointer; font-family: 'Cinzel Decorative'; font-weight: bold; border: none; transition: 0.3s; }
+        #yes-btn:hover, #replay-btn:hover { background: #fff; transform: scale(1.05); }
+        
         #no-btn { position: absolute; background: transparent; color: white; border: 1px solid var(--gold); padding: 8px 20px; border-radius: 20px; cursor: pointer; transition: 0.1s; }
 
         .nav-controls { position: absolute; bottom: 20px; width: 100%; display: none; justify-content: center; gap: 80px; z-index: 5000; }
@@ -114,6 +112,7 @@
             <div class="cover-border">
                 <div style="font-family: 'Great Vibes'; font-size: 4rem; color: var(--gold);">And so...</div>
                 <h1 style="font-family: 'Cinzel Decorative'; font-size: 5rem; margin: 20px 0; color: var(--gold);">FOREVER BEGINS</h1>
+                <button id="replay-btn" onclick="restartSaga()">START OVER</button>
             </div>
         </div>
 
@@ -155,6 +154,21 @@
             document.getElementById('album-content').style.display = 'block';
             document.getElementById('nav-ui').style.display = 'flex';
             updatePage();
+        }
+
+        function restartSaga() {
+            // Reset state
+            current = 0;
+            // Hide final page
+            document.getElementById('final-page').style.display = 'none';
+            // Reset cover
+            const cover = document.getElementById('book-cover');
+            cover.classList.remove('cover-open');
+            cover.style.opacity = "1";
+            cover.style.pointerEvents = "auto";
+            // Hide UI until opened again
+            document.getElementById('album-content').style.display = 'none';
+            document.getElementById('nav-ui').style.display = 'none';
         }
 
         function danceNo() {
