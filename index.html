@@ -1,259 +1,530 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ViGotKompany | The Saga</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=MedievalSharp&family=Great+Vibes&display=swap" rel="stylesheet">
-    
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=MedievalSharp&family=Great+Vibes&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
-        :root {
-            --royal-red: #641212;
-            --gold: #ffd700;
-            --parchment: #fdfaf0;
-            --spine-dark: #3d0a0a;
-        }
+      :root {
+        --royal-red: #641212;
+        --gold: #ffd700;
+        --parchment: #fdfaf0;
+        --spine-dark: #3d0a0a;
+      }
 
-        body, html { 
-            margin: 0; padding: 0; background: #1a0505; 
-            height: 100vh; display: flex; justify-content: center; align-items: center;
-            overflow: hidden; font-family: 'MedievalSharp', serif;
-            touch-action: none;
-        }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        background: #1a0505;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        font-family: "MedievalSharp", serif;
+        touch-action: none;
+      }
 
-        #book-container {
-            width: 95vw; height: 90vh; max-width: 1200px;
-            perspective: 3000px;
-            display: flex; justify-content: center; align-items: center;
-        }
+      #book-container {
+        width: 95vw;
+        height: 90vh;
+        max-width: 1200px;
+        perspective: 3000px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-        #book {
-            width: 100%; height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            background: var(--parchment);
-            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
-            border-radius: 5px 20px 20px 5px;
-        }
+      #book {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        background: var(--parchment);
+        box-shadow: 0 50px 100px rgba(0, 0, 0, 0.8);
+        border-radius: 5px 20px 20px 5px;
+      }
 
-        /* SPINE DETAIL */
-        #book::before {
-            content: ""; position: absolute; left: 50%; width: 2px; height: 100%;
-            background: rgba(0,0,0,0.15); z-index: 10; transform: translateX(-50%);
-        }
+      #book::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        width: 2px;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.15);
+        z-index: 10;
+        transform: translateX(-50%);
+      }
 
-        /* COVER */
-        #book-cover {
-            position: absolute; width: 100%; height: 100%;
-            background: var(--royal-red); color: white;
-            z-index: 1000; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            transform-origin: left; transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-            border-left: 15px solid var(--spine-dark);
-            backface-visibility: hidden; text-align: center;
-        }
-        .cover-open { transform: rotateY(-135deg); pointer-events: none; }
+      /* FRONT & BACK COVERS */
+      .book-cover {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: var(--royal-red);
+        color: white;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transform-origin: left;
+        transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+        border-left: 15px solid var(--spine-dark);
+        backface-visibility: hidden;
+        text-align: center;
+      }
 
-        /* PAGES */
-        .page { width: 50%; height: 100%; position: absolute; top: 0; padding: 40px; box-sizing: border-box; transition: opacity 0.4s; }
-        .left-page { left: 0; border-right: 1px solid rgba(0,0,0,0.05); }
-        .right-page { right: 0; background: #fdfaf0; overflow: hidden; }
+      .cover-open {
+        transform: rotateY(-135deg);
+        pointer-events: none;
+      }
 
-        /* TEXT STYLING */
-        h2 { font-family: 'Cinzel Decorative'; color: var(--royal-red); border-bottom: 2px solid var(--gold); margin-top: 0; font-size: 2rem; }
-        .drop-cap { font-family: 'Cinzel Decorative'; font-size: 4rem; color: var(--royal-red); float: left; line-height: 0.7; margin-right: 15px; }
-        p { font-size: 1.15rem; line-height: 1.6; color: #2c2c2c; }
+      /* The Ending Screen */
+      #final-page {
+        z-index: 5;
+        /* Behind the page turner, but looks like a cover */
+        background: var(--royal-red);
+        color: white;
+        display: none;
+        /* Shown only on last step */
+      }
 
-        /* SCRAPBOOK COLLAGE */
-        #collage { width: 100%; height: 100%; position: relative; }
-        .photo-frame {
-            position: absolute; background: #fff; padding: 10px 10px 35px 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 200px;
-            cursor: grab; user-select: none; touch-action: none;
-            opacity: 0; transform: scale(0.5);
-            transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .photo-frame img { width: 100%; height: auto; pointer-events: none; display: block; }
-        .photo-frame.visible { opacity: 1; transform: scale(1) rotate(var(--r)); }
+      /* PAGES */
+      .page {
+        width: 50%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        padding: 40px;
+        box-sizing: border-box;
+        transition: opacity 0.4s;
+      }
 
-        /* ZOOMED STATE */
-        .photo-frame.zoomed {
-            position: fixed !important;
-            top: 50% !important; left: 50% !important;
-            transform: translate(-50%, -50%) scale(1.8) rotate(0deg) !important;
-            z-index: 2000 !important;
-            cursor: zoom-out;
-            box-shadow: 0 0 100px rgba(0,0,0,0.8);
-        }
+      .left-page {
+        left: 0;
+        border-right: 1px solid rgba(0, 0, 0, 0.05);
+      }
 
-        /* PAGE TURN OVERLAY */
-        #page-turner {
-            position: absolute; right: 0; width: 50%; height: 100%;
-            background: var(--parchment); transform-origin: left;
-            transition: transform 1s ease-in-out; z-index: 500;
-            pointer-events: none; box-shadow: inset 20px 0 50px rgba(0,0,0,0.1);
-            visibility: hidden;
-        }
-        .turning { visibility: visible !important; transform: rotateY(-180deg); }
+      .right-page {
+        right: 0;
+        background: #fdfaf0;
+        overflow: hidden;
+      }
 
-        /* CONTROLS */
-        .controls {
-            position: absolute; bottom: 30px; width: 100%;
-            display: flex; justify-content: center; gap: 100px;
-            font-family: 'Cinzel Decorative'; font-weight: bold; color: #ae9656;
-            z-index: 600;
-        }
-        .controls span { cursor: pointer; background: rgba(255,255,255,0.8); padding: 8px 25px; border-radius: 30px; transition: 0.3s; }
-        .controls span:hover { background: var(--gold); color: var(--royal-red); }
+      /* TEXT STYLING */
+      h2 {
+        font-family: "Cinzel Decorative";
+        color: var(--royal-red);
+        border-bottom: 2px solid var(--gold);
+        margin-top: 0;
+        font-size: 2rem;
+      }
 
-        #open-btn { 
-            background: var(--gold); color: var(--royal-red); 
-            padding: 18px 50px; font-family: 'Cinzel Decorative'; 
-            font-size: 1.5rem; border: none; cursor: pointer; border-radius: 50px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-top: 20px;
-        }
+      .drop-cap {
+        font-family: "Cinzel Decorative";
+        font-size: 4rem;
+        color: var(--royal-red);
+        float: left;
+        line-height: 0.7;
+        margin-right: 15px;
+      }
+
+      p {
+        font-size: 1.15rem;
+        line-height: 1.6;
+        color: #2c2c2c;
+      }
+
+      /* SCRAPBOOK COLLAGE */
+      #collage {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      .photo-frame {
+        position: absolute;
+        background: #fff;
+        padding: 10px 10px 35px 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        width: 200px;
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+        opacity: 0;
+        transform: scale(0.5);
+        transition:
+          opacity 0.5s ease,
+          transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .photo-frame img {
+        width: 100%;
+        height: auto;
+        pointer-events: none;
+        display: block;
+      }
+
+      .photo-frame.visible {
+        opacity: 1;
+        transform: scale(1) rotate(var(--r));
+      }
+
+      .photo-frame.zoomed {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) scale(1.8) rotate(0deg) !important;
+        z-index: 2000 !important;
+        cursor: zoom-out;
+        box-shadow: 0 0 100px rgba(0, 0, 0, 0.8);
+      }
+
+      #page-turner {
+        position: absolute;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        background: var(--parchment);
+        transform-origin: left;
+        transition: transform 1s ease-in-out;
+        z-index: 500;
+        pointer-events: none;
+        box-shadow: inset 20px 0 50px rgba(0, 0, 0, 0.1);
+        visibility: hidden;
+      }
+
+      .turning {
+        visibility: visible !important;
+        transform: rotateY(-180deg);
+      }
+
+      .controls {
+        position: absolute;
+        bottom: 30px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 100px;
+        font-family: "Cinzel Decorative";
+        font-weight: bold;
+        color: #ae9656;
+        z-index: 600;
+      }
+
+      .controls span {
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 8px 25px;
+        border-radius: 30px;
+        transition: 0.3s;
+      }
+
+      #open-btn {
+        background: var(--gold);
+        color: var(--royal-red);
+        padding: 18px 50px;
+        font-family: "Cinzel Decorative";
+        font-size: 1.5rem;
+        border: none;
+        cursor: pointer;
+        border-radius: 50px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        margin-top: 20px;
+      }
     </style>
-</head>
-<body>
+  </head>
 
+  <body>
     <div id="book-container">
-        <div id="book">
-            <div id="book-cover">
-                <div style="font-family: 'Great Vibes'; font-size: 3.5rem; color: var(--gold);">The Chronicles of</div>
-                <h1 style="font-family: 'Cinzel Decorative'; font-size: 4.5rem; margin: 15px 0;">#ViGotKOMpany</h1>
-                <button id="open-btn" onclick="openStory()">OPEN SAGA</button>
-            </div>
-
-            <div class="page left-page" id="lp-content">
-                <h2 id="chapter-title">The Closing Rank</h2>
-                <div id="chapter-body">
-                    <p><span class="drop-cap">O</span>nce, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>
-                </div>
-            </div>
-
-            <div class="page right-page">
-                <div id="collage"></div>
-            </div>
-
-            <div id="page-turner"></div>
-
-            <div class="controls">
-                <span id="prev" style="visibility:hidden" onclick="step(-1)">↞ PREV</span>
-                <span id="next" onclick="step(1)">NEXT ➔</span>
-            </div>
+      <div id="book">
+        <div id="book-cover" class="book-cover">
+          <div
+            style="
+              font-family: &quot;Great Vibes&quot;;
+              font-size: 3.5rem;
+              color: var(--gold);
+            "
+          >
+            The Chronicles of
+          </div>
+          <h1
+            style="
+              font-family: &quot;Cinzel Decorative&quot;;
+              font-size: 4.5rem;
+              margin: 15px 0;
+            "
+          >
+            #ViGotKOMpany
+          </h1>
+          <button id="open-btn" onclick="openStory()">OPEN SAGA</button>
         </div>
+
+        <div id="final-page" class="book-cover">
+          <div
+            style="
+              font-family: &quot;Great Vibes&quot;;
+              font-size: 4rem;
+              color: var(--gold);
+            "
+          >
+            And so...
+          </div>
+          <h1
+            style="
+              font-family: &quot;Cinzel Decorative&quot;;
+              font-size: 5rem;
+              margin: 20px 0;
+            "
+          >
+            FOREVER BEGINS
+          </h1>
+          <div
+            style="
+              font-family: &quot;MedievalSharp&quot;;
+              font-size: 1.5rem;
+              letter-spacing: 5px;
+              opacity: 0.8;
+            "
+          >
+            #ViGotKOMpany
+          </div>
+        </div>
+
+        <div class="page left-page" id="lp-content">
+          <h2 id="chapter-title">The Closing Rank</h2>
+          <div id="chapter-body"></div>
+        </div>
+
+        <div class="page right-page">
+          <div id="collage"></div>
+        </div>
+
+        <div id="page-turner"></div>
+
+        <div class="controls" id="nav-controls">
+          <span id="prev" style="visibility: hidden" onclick="step(-1)"
+            >↞ PREV</span
+          >
+          <span id="next" onclick="step(1)">NEXT ➔</span>
+        </div>
+      </div>
     </div>
 
     <script>
-        let current = 0;
-        let zCounter = 100;
+      let current = 0;
+      let zCounter = 100;
 
-        const chapters = [
-            { t: "The Closing Rank", b: "<p>Once, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>", imgs: ["5.jpeg", "6.jpeg"] },
-            { t: "The Barista 'Non-Date'", b: "<p>In Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>", imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"] },
-            { t: "The Hillside Proposal", b: "<p>Ganesh Chaturthi 2018. Recreating 'Om Shanti Oshana' at the TV Tower hill—in 35° heat and slippers!</p>", imgs: ["7.jpeg", "9.jpeg", "10.jpeg", "11.jpeg", "12.jpeg"] },
-            { t: "Milestones", b: "<p>Intern, and beyond!</p>", imgs: ["13.jpeg", "14.jpeg","15.jpeg", "16.jpeg", "20.jpeg", "21.jpeg"] },
-            { t: "The NEVER Ending Long Distance", b: "<p>We survived it!</p>", imgs: ["22.jpeg","23.jpeg","24.jpeg","25.jpeg","26.jpeg","27.jpeg","28.jpeg","29.jpeg"] },
-            { t: "The Wedding 2025", b: "<p><span class='drop-cap'>W</span>e traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany.</p>", imgs: ["30.jpeg","31.jpeg","32.jpeg"] }
-        ];
+      const chapters = [
+        {
+          t: "The Closing Rank",
+          b: "<p>Once, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>",
+          imgs: ["5.jpeg", "6.jpeg"],
+        },
+        {
+          t: "The Barista 'Non-Date'",
+          b: "<p>In Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>",
+          imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"],
+        },
+        {
+          t: "The Hillside Proposal",
+          b: "<p>Ganesh Chaturthi 2018. Recreating 'Om Shanti Oshana' at the TV Tower hill—in 35° heat and slippers!</p>",
+          imgs: ["7.jpeg", "9.jpeg", "10.jpeg", "11.jpeg", "12.jpeg"],
+        },
+        {
+          t: "Milestones",
+          b: "<p>Intern, and beyond!</p>",
+          imgs: [
+            "13.jpeg",
+            "14.jpeg",
+            "15.jpeg",
+            "16.jpeg",
+            "20.jpeg",
+            "21.jpeg",
+          ],
+        },
+        {
+          t: "The NEVER Ending Long Distance",
+          b: "<p>We survived it!</p>",
+          imgs: [
+            "22.jpeg",
+            "23.jpeg",
+            "24.jpeg",
+            "25.jpeg",
+            "26.jpeg",
+            "27.jpeg",
+            "28.jpeg",
+            "29.jpeg",
+          ],
+        },
+        {
+          t: "The Wedding 2025",
+          b: "<p><span class='drop-cap'>W</span>e traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany.</p>",
+          imgs: ["30.jpeg", "31.jpeg", "32.jpeg"],
+        },
+        {
+          t: "ENDING", // Marker for the last screen
+          b: "",
+          imgs: [],
+        },
+      ];
 
-        function openStory() {
-            document.getElementById('book-cover').classList.add('cover-open');
-            setTimeout(() => renderCollage(chapters[0].imgs), 600);
+      function openStory() {
+        document.getElementById("book-cover").classList.add("cover-open");
+        updateContent();
+      }
+
+      function updateContent() {
+        const ch = chapters[current];
+
+        // Check if it's the ending
+        if (ch.t === "ENDING") {
+          document.getElementById("final-page").style.display = "flex";
+          document.getElementById("nav-controls").style.display = "none";
+          return;
         }
 
-        function renderCollage(imgs) {
-            const area = document.getElementById('collage');
-            area.innerHTML = '';
-            
-            imgs.forEach((src, i) => {
-                const frame = document.createElement('div');
-                frame.className = 'photo-frame';
-                const rotate = Math.random() * 24 - 12;
-                
-                // Centering Logic
-                frame.style.left = `calc(50% - 100px + ${(Math.random() - 0.5) * 120}px)`;
-                frame.style.top = `calc(50% - 140px + ${(Math.random() - 0.5) * 100}px)`;
-                frame.style.setProperty('--r', rotate + 'deg');
-                frame.style.zIndex = i + 1;
-                
-                frame.innerHTML = `<img src="${src}" onerror="this.src='https://via.placeholder.com/200x250?text=Check+Path'">`;
-                
-                area.appendChild(frame);
-                attachDrag(frame);
+        document.getElementById("chapter-title").innerText = ch.t;
+        document.getElementById("chapter-body").innerHTML = ch.b;
+        renderCollage(ch.imgs);
 
-                setTimeout(() => frame.classList.add('visible'), 150 + (i * 120));
-            });
-        }
+        document.getElementById("prev").style.visibility =
+          current === 0 ? "hidden" : "visible";
+        document.getElementById("next").style.visibility =
+          current === chapters.length - 1 ? "hidden" : "visible";
+      }
 
-        function step(dir) {
-            const turner = document.getElementById('page-turner');
-            const lp = document.getElementById('lp-content');
-            
-            turner.classList.add('turning');
-            lp.style.opacity = '0';
+      function renderCollage(imgs) {
+        const area = document.getElementById("collage");
+        area.innerHTML = "";
 
-            setTimeout(() => {
-                current += dir;
-                const ch = chapters[current];
-                document.getElementById('chapter-title').innerText = ch.t;
-                document.getElementById('chapter-body').innerHTML = ch.b;
-                renderCollage(ch.imgs);
+        imgs.forEach((src, i) => {
+          const frame = document.createElement("div");
+          frame.className = "photo-frame";
+          const rotate = Math.random() * 24 - 12;
 
-                document.getElementById('prev').style.visibility = current === 0 ? 'hidden' : 'visible';
-                document.getElementById('next').style.visibility = current === chapters.length - 1 ? 'hidden' : 'visible';
-            }, 500);
+          frame.style.left = `calc(50% - 100px + ${(Math.random() - 0.5) * 120}px)`;
+          frame.style.top = `calc(50% - 140px + ${(Math.random() - 0.5) * 100}px)`;
+          frame.style.setProperty("--r", rotate + "deg");
+          frame.style.zIndex = i + 1;
 
-            setTimeout(() => {
-                turner.style.transition = 'none';
-                turner.classList.remove('turning');
-                lp.style.opacity = '1';
-                setTimeout(() => turner.style.transition = 'transform 1s ease-in-out', 50);
-            }, 1100);
-        }
+          frame.innerHTML = `<img src="${src}" onerror="this.src='https://via.placeholder.com/200x250?text=Check+Path'">`;
+          area.appendChild(frame);
+          attachDrag(frame);
 
-        function attachDrag(el) {
-            let isDragging = false, startX, startY, initX, initY, lastTap = 0;
+          setTimeout(() => frame.classList.add("visible"), 150 + i * 120);
+        });
+      }
 
-            const start = (e) => {
-                const now = Date.now();
-                if (now - lastTap < 300) { // Double Tap detected
-                    el.classList.toggle('zoomed');
-                    return;
-                }
-                lastTap = now;
+      function step(dir) {
+        const turner = document.getElementById("page-turner");
+        const lp = document.getElementById("lp-content");
+        const collageArea = document.getElementById("collage");
 
-                if (el.classList.contains('zoomed')) return;
+        // 1. Start the flip animation immediately
+        turner.classList.add("turning");
 
-                isDragging = true;
-                el.style.zIndex = ++zCounter;
-                const t = e.touches ? e.touches[0] : e;
-                startX = t.clientX; startY = t.clientY;
-                initX = el.offsetLeft; initY = el.offsetTop;
-                el.style.transition = "none";
-            };
+        // 2. Fade out the current text slightly faster than the flip
+        lp.style.transition = "opacity 0.3s ease";
+        lp.style.opacity = "0";
 
-            const move = (e) => {
-                if (!isDragging || el.classList.contains('zoomed')) return;
-                const t = e.touches ? e.touches[0] : e;
-                el.style.left = (initX + (t.clientX - startX)) + "px";
-                el.style.top = (initY + (t.clientY - startY)) + "px";
-            };
+        // 3. Wait for the flip to reach the "Vertical" point (approx 500ms)
+        // This is the "Blind Spot" where the user can't see the pages
+        setTimeout(() => {
+          current += dir;
+          const ch = chapters[current];
 
-            const stop = () => {
-                isDragging = false;
-                if (!el.classList.contains('zoomed')) {
-                    el.style.transition = "opacity 0.5s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
-                }
-            };
+          // UPDATE TEXT
+          document.getElementById("chapter-title").innerText = ch.t;
+          document.getElementById("chapter-body").innerHTML = ch.b;
 
-            el.addEventListener('mousedown', start);
-            el.addEventListener('touchstart', start, {passive: false});
-            window.addEventListener('mousemove', move);
-            window.addEventListener('touchmove', move, {passive: false});
-            window.addEventListener('mouseup', stop);
-            window.addEventListener('touchend', stop);
-        }
+          // PRE-CLEAR AND PRE-RENDER COLLAGE (Hidden)
+          collageArea.style.visibility = "hidden";
+          renderCollage(ch.imgs);
+
+          // Update Nav visibility
+          document.getElementById("prev").style.visibility =
+            current === 0 ? "hidden" : "visible";
+          const isEnd = current === chapters.length - 1;
+          document.getElementById("next").style.visibility = isEnd
+            ? "hidden"
+            : "visible";
+
+          // Small internal timeout to ensure DOM has painted the new images
+          setTimeout(() => {
+            collageArea.style.visibility = "visible";
+            lp.style.opacity = "1";
+          }, 50);
+        }, 500); // This 500ms matches the peak of the 1s transition
+
+        // 4. Reset the Turner after the full flip is done
+        setTimeout(() => {
+          turner.style.transition = "none";
+          turner.classList.remove("turning");
+
+          // Re-enable transition for the next click
+          setTimeout(() => {
+            turner.style.transition = "transform 1s ease-in-out";
+          }, 50);
+        }, 1050);
+      }
+
+      function attachDrag(el) {
+        let isDragging = false,
+          startX,
+          startY,
+          initX,
+          initY,
+          lastTap = 0;
+
+        const start = (e) => {
+          const now = Date.now();
+          if (now - lastTap < 300) {
+            el.classList.toggle("zoomed");
+            return;
+          }
+          lastTap = now;
+
+          if (el.classList.contains("zoomed")) return;
+          isDragging = true;
+          el.style.zIndex = ++zCounter;
+          const t = e.touches ? e.touches[0] : e;
+          startX = t.clientX;
+          startY = t.clientY;
+          initX = el.offsetLeft;
+          initY = el.offsetTop;
+          el.style.transition = "none";
+        };
+
+        const move = (e) => {
+          if (!isDragging || el.classList.contains("zoomed")) return;
+          const t = e.touches ? e.touches[0] : e;
+          el.style.left = initX + (t.clientX - startX) + "px";
+          el.style.top = initY + (t.clientY - startY) + "px";
+        };
+
+        const stop = () => {
+          isDragging = false;
+          if (!el.classList.contains("zoomed")) {
+            el.style.transition =
+              "opacity 0.5s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+          }
+        };
+
+        el.addEventListener("mousedown", start);
+        el.addEventListener("touchstart", start, { passive: false });
+        window.addEventListener("mousemove", move);
+        window.addEventListener("touchmove", move, { passive: false });
+        window.addEventListener("mouseup", stop);
+        window.addEventListener("touchend", stop);
+      }
     </script>
-</body>
+  </body>
 </html>
