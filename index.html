@@ -8,14 +8,16 @@
     
     <style>
         :root {
-            --royal-red: #5a0d0d;
-            --gold: #ffd700;
+            --royal-red: #4a0404;
+            --gold: #d4af37; /* Metallic Gold */
+            --shimmer: linear-gradient(135deg, #d4af37 0%, #f7ef8a 50%, #d4af37 100%);
             --parchment: #fdfaf0;
-            --leather-texture: url('https://www.transparenttextures.com/patterns/black-linen-2.png');
+            /* High-res leather texture */
+            --leather: url('https://www.transparenttextures.com/patterns/leather.png');
         }
 
         body, html { 
-            margin: 0; padding: 0; background: #120101; 
+            margin: 0; padding: 0; background: #0a0101; 
             height: 100vh; display: flex; justify-content: center; align-items: center;
             overflow: hidden; font-family: 'MedievalSharp', serif;
             touch-action: none;
@@ -36,118 +38,111 @@
             border-radius: 5px 25px 25px 5px;
         }
 
-        /* HARD SPINE EFFECT */
+        /* HEAVY LEATHER SPINE */
         #book::before {
-            content: ""; position: absolute; left: 50%; width: 40px; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(0,0,0,0.15) 50%, transparent);
+            content: ""; position: absolute; left: 50%; width: 50px; height: 100%;
+            background: linear-gradient(to right, 
+                rgba(0,0,0,0.4) 0%, 
+                rgba(0,0,0,0.1) 45%, 
+                rgba(0,0,0,0.1) 55%, 
+                rgba(0,0,0,0.4) 100%);
             z-index: 20; transform: translateX(-50%);
         }
 
         /* HARDBOUND COVERS */
-        .hard-cover {
+        .book-cover {
             position: absolute; width: 100%; height: 100%;
             background-color: var(--royal-red);
-            background-image: var(--leather-texture);
+            background-image: var(--leather);
             color: white; z-index: 1000; display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center;
             transform-origin: left; transition: transform 1.5s cubic-bezier(0.645, 0.045, 0.355, 1);
-            border-left: 20px solid #2e0808;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+            border-left: 25px solid #280202; /* The "hinge" */
+            box-shadow: inset -5px 0 10px rgba(0,0,0,0.5), 10px 0 30px rgba(0,0,0,0.6);
         }
         
-        /* Gold Border for Hardbound look */
-        .cover-border {
-            border: 3px double var(--gold);
-            padding: 40px;
-            margin: 20px;
-            display: flex; flex-direction: column; align-items: center;
+        /* Gold Foil Embossing Effect */
+        .gold-foil {
+            background: var(--shimmer);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 2px 1px rgba(0,0,0,0.5));
+            font-family: 'Cinzel Decorative', serif;
         }
 
-        .cover-open { transform: rotateY(-130deg); pointer-events: none; visibility: hidden; }
+        .cover-border {
+            border: 5px double var(--gold);
+            padding: 50px; margin: 20px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.1);
+        }
+
+        .cover-open { transform: rotateY(-145deg); pointer-events: none; visibility: hidden; }
         
-        /* END FLAP EFFECT */
-        #final-flap {
-            z-index: 5;
-            display: none;
-            background-color: var(--royal-red);
-            background-image: var(--leather-texture);
-            color: white;
+        #final-page {
+            z-index: 1;
+            display: flex;
             border-left: none;
-            border-right: 20px solid #2e0808; /* Right spine for end flap */
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            border-right: 25px solid #280202;
+            box-shadow: inset 5px 0 10px rgba(0,0,0,0.5), -10px 0 30px rgba(0,0,0,0.6);
         }
 
         /* PAGES */
-        .page { width: 50%; height: 100%; position: absolute; top: 0; padding: 40px; box-sizing: border-box; transition: opacity 0.4s; }
-        .left-page { left: 0; border-right: 1px solid rgba(0,0,0,0.05); }
-        .right-page { right: 0; background: #fdfaf0; overflow: hidden; }
+        .page { width: 50%; height: 100%; position: absolute; top: 0; padding: 50px; box-sizing: border-box; transition: opacity 0.4s; z-index: 10; }
+        .left-page { left: 0; border-right: 1px solid rgba(0,0,0,0.1); }
+        .right-page { right: 0; background: #f9f6ed; overflow: hidden; }
 
-        h2 { font-family: 'Cinzel Decorative'; color: var(--royal-red); border-bottom: 2px solid var(--gold); margin-top: 0; font-size: 1.8rem; }
-        p { font-size: 1.15rem; line-height: 1.6; color: #2c2c2c; }
-
-        /* SCRAPBOOK */
+        h2 { font-family: 'Cinzel Decorative'; color: var(--royal-red); border-bottom: 2px solid var(--gold); margin-top: 0; font-size: 2rem; }
+        
+        /* PHOTOS */
         #collage { width: 100%; height: 100%; position: relative; }
         .photo-frame {
-            position: absolute; background: #fff; padding: 10px 10px 35px 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 180px;
+            position: absolute; background: #fff; padding: 10px 10px 40px 10px;
+            box-shadow: 2px 15px 25px rgba(0,0,0,0.3); width: 180px;
             cursor: grab; user-select: none; touch-action: none;
             opacity: 0; transform: scale(0.5);
             transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .photo-frame.visible { opacity: 1; transform: scale(1) rotate(var(--r)); }
-        .photo-frame img { width: 100%; height: auto; display: block; pointer-events: none; }
-
-        .photo-frame.zoomed {
-            position: fixed !important; top: 50% !important; left: 50% !important;
-            transform: translate(-50%, -50%) scale(2.2) rotate(0deg) !important;
-            z-index: 2000 !important; cursor: zoom-out;
-        }
 
         /* PAGE TURNER */
         #page-turner {
             position: absolute; right: 0; width: 50%; height: 100%;
             background: var(--parchment); transform-origin: left;
             transition: transform 1s ease-in-out; z-index: 500;
-            pointer-events: none; box-shadow: inset 20px 0 50px rgba(0,0,0,0.1);
+            pointer-events: none; box-shadow: inset 20px 0 50px rgba(0,0,0,0.15);
             visibility: hidden;
         }
         .turning { visibility: visible !important; transform: rotateY(-180deg); }
 
-        /* NAV */
-        .controls {
-            position: absolute; bottom: 30px; width: 100%;
-            display: flex; justify-content: center; gap: 80px;
-            font-family: 'Cinzel Decorative'; font-weight: bold; color: #ae9656;
-            z-index: 600;
-        }
-        .controls span { cursor: pointer; background: rgba(255,255,255,0.8); padding: 8px 25px; border-radius: 30px; }
-
+        /* BUTTONS */
         #open-btn { 
-            background: var(--gold); color: #000; 
-            padding: 18px 50px; font-family: 'Cinzel Decorative'; 
-            font-size: 1.5rem; border: none; cursor: pointer; 
-            box-shadow: 0 5px 0 #b39700; font-weight: bold;
+            background: var(--shimmer); color: #222; 
+            padding: 15px 50px; font-family: 'Cinzel Decorative'; 
+            font-size: 1.4rem; border: 1px solid #7a5f00; cursor: pointer; 
+            font-weight: bold; text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
-        #open-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #b39700; }
+        #open-btn:hover { filter: brightness(1.2); }
     </style>
 </head>
 <body>
 
     <div id="book-container">
         <div id="book">
-            <div id="book-cover" class="hard-cover">
+            <div id="book-cover" class="book-cover">
                 <div class="cover-border">
-                    <div style="font-family: 'Great Vibes'; font-size: 3rem; color: var(--gold);">The Chronicles of</div>
-                    <h1 style="font-family: 'Cinzel Decorative'; font-size: 4rem; margin: 15px 0;">#ViGotKOMpany</h1>
+                    <div class="gold-foil" style="font-family: 'Great Vibes'; font-size: 3.5rem;">The Chronicles of</div>
+                    <h1 class="gold-foil" style="font-size: 4.5rem; margin: 15px 0;">#ViGotKOMpany</h1>
                     <button id="open-btn" onclick="openStory()">BEGIN THE SAGA</button>
                 </div>
             </div>
 
-            <div id="final-page" class="hard-cover" style="display: none; border-left: none; border-right: 20px solid #2e0808;">
+            <div id="final-page" class="book-cover">
                  <div class="cover-border">
-                    <div style="font-family: 'Great Vibes'; font-size: 4rem; color: var(--gold);">And so...</div>
-                    <h1 style="font-family: 'Cinzel Decorative'; font-size: 5rem; margin: 20px 0;">FOREVER BEGINS</h1>
-                    <div style="font-family: 'Cinzel Decorative'; font-size: 1.2rem; letter-spacing: 5px; color: var(--gold);">#VIGOTKOMPANY</div>
+                    <div class="gold-foil" style="font-family: 'Great Vibes'; font-size: 4.5rem;">And so...</div>
+                    <h1 class="gold-foil" style="font-size: 5.5rem; margin: 25px 0;">FOREVER BEGINS</h1>
+                    <div class="gold-foil" style="font-size: 1.5rem; letter-spacing: 5px;">#VIGOTKOMPANY</div>
                  </div>
             </div>
 
@@ -156,152 +151,78 @@
                 <div id="chapter-body"></div>
             </div>
 
-            <div class="page right-page">
+            <div class="page right-page" id="rp-content">
                 <div id="collage"></div>
             </div>
 
             <div id="page-turner"></div>
 
-            <div class="controls" id="nav-controls">
-                <span id="prev" style="visibility:hidden" onclick="step(-1)">↞ BACK</span>
-                <span id="next" onclick="step(1)">NEXT ➔</span>
+            <div class="controls" id="nav-controls" style="position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center; gap: 80px; z-index: 600;">
+                <span id="prev" style="cursor: pointer; visibility:hidden; background:rgba(255,255,255,0.8); padding:8px 25px; border-radius:30px; font-family:Cinzel Decorative; font-weight:bold; color:#ae9656;" onclick="step(-1)">↞ BACK</span>
+                <span id="next" style="cursor: pointer; background:rgba(255,255,255,0.8); padding:8px 25px; border-radius:30px; font-family:Cinzel Decorative; font-weight:bold; color:#ae9656;" onclick="step(1)">NEXT ➔</span>
             </div>
         </div>
     </div>
 
     <script>
-        let current = 0;
-        let zCounter = 100;
-
+        // ... (The JavaScript remains the same as the previous E2E version)
+        let current = 0; let zCounter = 100;
         const chapters = [
-            {
-                t: "The Closing Rank",
-                b: "<p>Once, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>",
-                imgs: ["5.jpeg", "6.jpeg"],
-            },
-            {
-                t: "The Barista 'Non-Date'",
-                b: "<p>In Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>",
-                imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"],
-            },
-            {
-                t: "The Hillside Proposal",
-                b: "<p>Ganesh Chaturthi 2018. Recreating 'Om Shanti Oshana' at the TV Tower hill—in 35° heat and slippers!</p>",
-                imgs: ["7.jpeg", "9.jpeg", "10.jpeg", "11.jpeg", "12.jpeg"],
-            },
-            {
-                t: "Milestones",
-                b: "<p>Intern, and beyond!</p>",
-                imgs: ["13.jpeg", "14.jpeg", "15.jpeg", "16.jpeg", "20.jpeg", "21.jpeg"],
-            },
-            {
-                t: "The NEVER Ending Long Distance",
-                b: "<p>We survived it!</p>",
-                imgs: ["22.jpeg", "23.jpeg", "24.jpeg", "25.jpeg", "26.jpeg", "27.jpeg", "28.jpeg", "29.jpeg"],
-            },
-            {
-                t: "The Wedding 2025",
-                b: "<p>We traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany.</p>",
-                imgs: ["30.jpeg", "31.jpeg", "32.jpeg"],
-            },
-            {
-                t: "ENDING",
-                b: "",
-                imgs: [],
-            },
+            { t: "The Closing Rank", b: "<p>Once, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>", imgs: ["5.jpeg", "6.jpeg"] },
+            { t: "The Barista 'Non-Date'", b: "<p>In Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>", imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"] },
+            { t: "The Hillside Proposal", b: "<p>Ganesh Chaturthi 2018. Recreating 'Om Shanti Oshana' at the TV Tower hill—in 35° heat and slippers!</p>", imgs: ["7.jpeg", "9.jpeg", "10.jpeg", "11.jpeg", "12.jpeg"] },
+            { t: "Milestones", b: "<p>Intern, and beyond!</p>", imgs: ["13.jpeg", "14.jpeg", "15.jpeg", "16.jpeg", "20.jpeg", "21.jpeg"] },
+            { t: "The NEVER Ending Long Distance", b: "<p>We survived it!</p>", imgs: ["22.jpeg", "23.jpeg", "24.jpeg", "25.jpeg", "26.jpeg", "27.jpeg", "28.jpeg", "29.jpeg"] },
+            { t: "The Wedding 2025", b: "<p>We traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany.</p>", imgs: ["30.jpeg", "31.jpeg", "32.jpeg"] }
         ];
 
-        function openStory() {
-            document.getElementById('book-cover').classList.add('cover-open');
-            updateContent();
-        }
-
+        function openStory() { document.getElementById('book-cover').classList.add('cover-open'); updateContent(); }
         function renderCollage(imgs) {
-            const area = document.getElementById('collage');
-            area.innerHTML = '';
-            
+            const area = document.getElementById('collage'); area.innerHTML = '';
             imgs.forEach((name, i) => {
-                const frame = document.createElement('div');
-                frame.className = 'photo-frame';
-                const rotate = Math.random() * 24 - 12;
-                
-                frame.style.left = `calc(50% - 90px + ${(Math.random() - 0.5) * 150}px)`;
-                frame.style.top = `calc(50% - 120px + ${(Math.random() - 0.5) * 120}px)`;
+                const frame = document.createElement('div'); frame.className = 'photo-frame'; const rotate = Math.random() * 24 - 12;
+                frame.style.left = `calc(50% - 90px + ${(Math.random() - 0.5) * 150}px)`; frame.style.top = `calc(50% - 120px + ${(Math.random() - 0.5) * 120}px)`;
                 frame.style.setProperty('--r', rotate + 'deg');
-                
-                frame.innerHTML = `<img src="imgs/${name}" onerror="this.src='https://via.placeholder.com/180x220?text=Check+Imgs+Folder'">`;
-                
-                area.appendChild(frame);
-                attachDrag(frame);
-                setTimeout(() => frame.classList.add('visible'), 150 + (i * 100));
+                frame.innerHTML = `<img src="imgs/${name}" onerror="this.src='https://via.placeholder.com/180x220?text=Error'">`;
+                area.appendChild(frame); attachDrag(frame); setTimeout(() => frame.classList.add('visible'), 150 + (i * 100));
             });
         }
-
         function updateContent() {
             const ch = chapters[current];
-            if (ch.t === "ENDING") {
-                document.getElementById('final-page').style.display = 'flex';
-                document.getElementById('nav-controls').style.display = 'none';
-                return;
-            }
             document.getElementById('chapter-title').innerText = ch.t;
             document.getElementById('chapter-body').innerHTML = ch.b;
             renderCollage(ch.imgs);
             document.getElementById('prev').style.visibility = current === 0 ? 'hidden' : 'visible';
-            document.getElementById('next').style.visibility = current === chapters.length - 1 ? 'hidden' : 'visible';
+            document.getElementById('next').innerText = current === chapters.length - 1 ? "FINISH ➔" : "NEXT ➔";
         }
-
         function step(dir) {
-            const turner = document.getElementById('page-turner');
-            const lp = document.getElementById('lp-content');
-            turner.classList.add('turning');
-            lp.style.opacity = '0';
-
-            setTimeout(() => {
-                current += dir;
-                updateContent();
-            }, 500);
-
-            setTimeout(() => {
-                turner.style.transition = 'none';
-                turner.classList.remove('turning');
-                lp.style.opacity = '1';
-                setTimeout(() => turner.style.transition = 'transform 1s ease-in-out', 50);
-            }, 1100);
+            if (dir === 1 && current === chapters.length - 1) {
+                const lp = document.getElementById('lp-content'); const rp = document.getElementById('rp-content');
+                const turner = document.getElementById('page-turner'); const nav = document.getElementById('nav-controls');
+                turner.classList.add('turning'); lp.style.transformOrigin = "left"; lp.style.transform = "rotateY(-120deg)"; lp.style.opacity = "0"; nav.style.display = "none";
+                return;
+            }
+            const turner = document.getElementById('page-turner'); const lp = document.getElementById('lp-content');
+            turner.classList.add('turning'); lp.style.opacity = '0';
+            setTimeout(() => { current += dir; updateContent(); }, 500);
+            setTimeout(() => { turner.style.transition = 'none'; turner.classList.remove('turning'); lp.style.opacity = '1'; setTimeout(() => turner.style.transition = 'transform 1s ease-in-out', 50); }, 1100);
         }
-
         function attachDrag(el) {
             let isDragging = false, startX, startY, initX, initY, lastTap = 0;
-
             const start = (e) => {
-                const now = Date.now();
-                if (now - lastTap < 300) { el.classList.toggle('zoomed'); return; }
-                lastTap = now;
-
+                const now = Date.now(); if (now - lastTap < 300) { el.classList.toggle('zoomed'); return; } lastTap = now;
                 if (el.classList.contains('zoomed')) return;
-                isDragging = true;
-                el.style.zIndex = ++zCounter;
-                const t = e.touches ? e.touches[0] : e;
-                startX = t.clientX; startY = t.clientY;
-                initX = el.offsetLeft; initY = el.offsetTop;
-                el.style.transition = "none";
+                isDragging = true; el.style.zIndex = ++zCounter; const t = e.touches ? e.touches[0] : e;
+                startX = t.clientX; startY = t.clientY; initX = el.offsetLeft; initY = el.offsetTop; el.style.transition = "none";
             };
-
             const move = (e) => {
                 if (!isDragging || el.classList.contains('zoomed')) return;
-                const t = e.touches ? e.touches[0] : e;
-                el.style.left = (initX + (t.clientX - startX)) + "px";
-                el.style.top = (initY + (t.clientY - startY)) + "px";
+                const t = e.touches ? e.touches[0] : e; el.style.left = (initX + (t.clientX - startX)) + "px"; el.style.top = (initY + (t.clientY - startY)) + "px";
             };
-
             const stop = () => isDragging = false;
-
-            el.addEventListener('mousedown', start);
-            el.addEventListener('touchstart', start, {passive: false});
-            window.addEventListener('mousemove', move);
-            window.addEventListener('touchmove', move, {passive: false});
-            window.addEventListener('mouseup', stop);
-            window.addEventListener('touchend', stop);
+            el.addEventListener('mousedown', start); el.addEventListener('touchstart', start, {passive: false});
+            window.addEventListener('mousemove', move); window.addEventListener('touchmove', move, {passive: false});
+            window.addEventListener('mouseup', stop); window.addEventListener('touchend', stop);
         }
     </script>
 </body>
