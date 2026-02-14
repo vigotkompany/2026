@@ -46,7 +46,6 @@
         }
         .cover-open { transform: rotateY(-145deg); pointer-events: none; opacity: 0; visibility: hidden; }
 
-        /* NO BUTTON */
         #no-btn {
             position: absolute; background: transparent; color: white;
             border: 1px solid var(--gold); padding: 8px 20px; border-radius: 20px;
@@ -72,7 +71,7 @@
 
         .page { 
             width: 50%; height: 100%; position: absolute; top: 0; padding: 50px; box-sizing: border-box; 
-            background: var(--parchment); z-index: 10; backface-visibility: hidden;
+            background: var(--parchment); z-index: 10;
         }
         .left-page { left: 0; border-radius: 5px 0 0 5px; border-right: 1px solid rgba(0,0,0,0.1); }
         .right-page { right: 0; border-radius: 0 5px 5px 0; overflow: hidden; position: relative; }
@@ -88,6 +87,7 @@
             opacity: 0; transform: scale(0.8);
             transition: opacity 1s var(--breezy), transform 1s var(--breezy);
             z-index: 20;
+            pointer-events: auto;
         }
         .photo-frame.visible { opacity: 1; transform: scale(1) rotate(var(--r)); }
         .photo-frame img { width: 100%; height: auto; display: block; pointer-events: none; }
@@ -154,6 +154,9 @@
     <script>
         let current = 0;
         let zIdx = 100;
+        let activeElement = null;
+        let startX, startY, initX, initY;
+
         const chapters = [
             { t: "The Closing Rank", b: "<p>Once, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>", imgs: ["5.jpeg", "6.jpeg"] },
             { t: "The Barista 'Non-Date'", b: "<p>In Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>", imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"] },
@@ -191,16 +194,10 @@
 
         function updatePage() {
             const ch = chapters[current];
-            // EXPLICIT ELEMENT SELECTION
-            const titleEl = document.getElementById('ch-title');
-            const bodyEl = document.getElementById('ch-body');
-            const area = document.getElementById('collage-area');
-
-            if(titleEl && bodyEl) {
-                titleEl.innerText = ch.t;
-                bodyEl.innerHTML = ch.b;
-            }
+            document.getElementById('ch-title').innerText = ch.t;
+            document.getElementById('ch-body').innerHTML = ch.b;
             
+            const area = document.getElementById('collage-area');
             area.innerHTML = '';
             ch.imgs.forEach((img, i) => {
                 const frame = document.createElement('div');
@@ -211,7 +208,11 @@
                 frame.style.setProperty('--r', r + 'deg');
                 frame.innerHTML = `<img src="imgs/${img}" onerror="this.src='https://via.placeholder.com/150x180?text=Photo'">`;
                 area.appendChild(frame);
-                dragMe(frame);
+                
+                // Set initial transform for drag logic
+                frame.dataset.x = 0;
+                frame.dataset.y = 0;
+
                 setTimeout(() => frame.classList.add('visible'), 200 + (i * 120));
             });
 
@@ -231,30 +232,50 @@
             setTimeout(() => {
                 current += dir;
                 updatePage();
-            }, 600); // Swaps at vertical point
+            }, 600);
 
             setTimeout(() => {
                 turner.classList.remove('turning');
             }, 1250);
         }
 
-        function dragMe(el) {
-            let active = false, startX, startY, initX, initY;
-            const down = (e) => {
-                active = true; el.style.zIndex = ++zIdx;
-                const t = e.touches ? e.touches[0] : e;
-                startX = t.clientX; startY = t.clientY;
-                initX = el.offsetLeft; initY = el.offsetTop;
-            };
-            const move = (e) => {
-                if (!active) return;
-                const t = e.touches ? e.touches[0] : e;
-                el.style.left = (initX + (t.clientX - startX)) + "px";
-                el.style.top = (initY + (t.clientY - startY)) + "px";
-            };
-            el.onmousedown = el.ontouchstart = down;
-            window.onmousemove = window.ontouchmove = move;
-            window.onmouseup = window.ontouchend = () => active = false;
+        /* MASTER DRAG LOGIC */
+        document.addEventListener('mousedown', startDrag);
+        document.addEventListener('touchstart', startDrag, {passive: false});
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, {passive: false});
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+
+        function startDrag(e) {
+            const target = e.target.closest('.photo-frame');
+            if (!target) return;
+            
+            activeElement = target;
+            activeElement.style.zIndex = ++zIdx;
+            activeElement.style.transition = 'none'; // Instant response
+            
+            const t = e.touches ? e.touches[0] : e;
+            startX = t.clientX;
+            startY = t.clientY;
+            initX = activeElement.offsetLeft;
+            initY = activeElement.offsetTop;
+        }
+
+        function drag(e) {
+            if (!activeElement) return;
+            const t = e.touches ? e.touches[0] : e;
+            const dx = t.clientX - startX;
+            const dy = t.clientY - startY;
+            
+            activeElement.style.left = (initX + dx) + "px";
+            activeElement.style.top = (initY + dy) + "px";
+        }
+
+        function endDrag() {
+            if (!activeElement) return;
+            activeElement.style.transition = 'opacity 1s var(--breezy), transform 1s var(--breezy)';
+            activeElement = null;
         }
     </script>
 </body>
