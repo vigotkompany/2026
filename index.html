@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>#ViGotKOMpany | The Saga</title>
+    <title>#ViGotKOMpany | The Hardbound Saga</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=MedievalSharp&family=Great+Vibes&display=swap" rel="stylesheet">
     
     <style>
@@ -13,6 +13,7 @@
             --shimmer: linear-gradient(135deg, #d4af37 0%, #f7ef8a 50%, #d4af37 100%);
             --parchment: #fdfaf0;
             --leather: url('https://www.transparenttextures.com/patterns/leather.png');
+            --page-grain: url('https://www.transparenttextures.com/patterns/cream-paper.png');
         }
 
         body, html { 
@@ -31,15 +32,21 @@
             position: relative;
             transform-style: preserve-3d;
             background: var(--parchment);
+            background-image: var(--page-grain);
             box-shadow: 0 50px 100px rgba(0,0,0,0.9);
             border-radius: 5px 25px 25px 5px;
         }
 
-        /* SPINE */
+        /* DYNAMIC SPINE SHADOW */
         #book::before {
-            content: ""; position: absolute; left: 50%; width: 40px; height: 100%;
-            background: linear-gradient(to right, rgba(0,0,0,0.3), rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.3));
+            content: ""; position: absolute; left: 50%; width: 60px; height: 100%;
+            background: linear-gradient(to right, 
+                rgba(0,0,0,0.2) 0%, 
+                rgba(0,0,0,0.02) 40%, 
+                rgba(0,0,0,0.02) 60%, 
+                rgba(0,0,0,0.2) 100%);
             z-index: 20; transform: translateX(-50%);
+            pointer-events: none;
         }
 
         /* COVERS */
@@ -58,11 +65,10 @@
             -webkit-text-fill-color: transparent; font-family: 'Cinzel Decorative';
         }
 
-        .cover-border { border: 4px double var(--gold); padding: 40px; margin: 20px; }
+        .cover-border { border: 4px double var(--gold); padding: 40px; margin: 20px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
 
         .cover-open { transform: rotateY(-140deg); pointer-events: none; visibility: hidden; }
         
-        /* FINAL SCREEN - Hidden by default */
         #final-page {
             display: none; position: absolute; width: 100%; height: 100%;
             background-color: var(--royal-red); background-image: var(--leather);
@@ -70,39 +76,63 @@
             justify-content: center; align-items: center;
         }
 
-        /* PAGES */
-        .page { width: 50%; height: 100%; position: absolute; top: 0; padding: 40px; box-sizing: border-box; background: var(--parchment); }
-        .left-page { left: 0; border-right: 1px solid rgba(0,0,0,0.1); z-index: 10; }
-        .right-page { right: 0; z-index: 10; overflow: hidden; }
+        /* PAGES WITH CHARACTER */
+        .page { 
+            width: 50%; height: 100%; position: absolute; top: 0; 
+            padding: 50px; box-sizing: border-box; 
+            background: var(--parchment);
+            background-image: var(--page-grain);
+            transition: opacity 0.4s;
+        }
 
-        /* IMAGES - Fixed sizing to prevent overlap/giant images */
+        /* Page Curvature Shadow */
+        .left-page { 
+            left: 0; 
+            border-right: 1px solid rgba(0,0,0,0.1); 
+            box-shadow: inset -20px 0 30px -15px rgba(0,0,0,0.1); /* Spine shadow */
+            z-index: 10; 
+        }
+        .right-page { 
+            right: 0; 
+            box-shadow: inset 20px 0 30px -15px rgba(0,0,0,0.1); /* Spine shadow */
+            z-index: 10; 
+            overflow: hidden; 
+        }
+
+        /* PHOTOS */
         .photo-frame {
-            position: absolute; background: #fff; padding: 8px 8px 30px 8px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3); width: 160px; /* Locked Width */
+            position: absolute; background: #fff; padding: 10px 10px 35px 10px;
+            box-shadow: 2px 8px 15px rgba(0,0,0,0.2); width: 160px;
             cursor: grab; transition: opacity 0.5s, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             opacity: 0; transform: scale(0.5);
         }
         .photo-frame.visible { opacity: 1; transform: scale(1) rotate(var(--r)); }
-        .photo-frame img { width: 100%; height: auto; pointer-events: none; }
-        .photo-frame.zoomed {
-            position: fixed !important; top: 50% !important; left: 50% !important;
-            transform: translate(-50%, -50%) scale(2) rotate(0deg) !important;
-            z-index: 3000 !important; cursor: zoom-out;
-        }
 
+        /* THE PAGE TURNER - Visual Page Thickness */
         #page-turner {
             position: absolute; right: 0; width: 50%; height: 100%;
-            background: var(--parchment); transform-origin: left;
-            transition: transform 0.8s ease-in-out; z-index: 500;
-            pointer-events: none; visibility: hidden;
+            background: var(--parchment); 
+            background-image: var(--page-grain);
+            transform-origin: left;
+            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1); 
+            z-index: 500;
+            pointer-events: none; 
+            visibility: hidden;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
         }
+        /* Shadow that appears on the left page as you turn the right one */
         .turning { visibility: visible !important; transform: rotateY(-180deg); }
 
         .controls {
             position: absolute; bottom: 30px; width: 100%;
             display: flex; justify-content: center; gap: 80px; z-index: 600;
         }
-        .controls span { cursor: pointer; background: rgba(255,255,255,0.9); padding: 8px 25px; border-radius: 30px; font-family: 'Cinzel Decorative'; font-weight: bold; }
+        .controls span { 
+            cursor: pointer; background: rgba(255,255,255,0.9); 
+            padding: 8px 25px; border-radius: 30px; 
+            font-family: 'Cinzel Decorative'; font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -113,7 +143,7 @@
                 <div class="cover-border">
                     <div class="gold-foil" style="font-family: 'Great Vibes'; font-size: 3rem;">The Chronicles of</div>
                     <h1 class="gold-foil" style="font-size: 4rem; margin: 15px 0;">#ViGotKOMpany</h1>
-                    <button id="open-btn" style="background:var(--gold); padding:15px 40px; cursor:pointer; font-family:'Cinzel Decorative'; font-weight:bold; border:none;" onclick="openStory()">BEGIN THE SAGA</button>
+                    <button id="open-btn" style="background:var(--gold); padding:15px 40px; cursor:pointer; font-family:'Cinzel Decorative'; font-weight:bold; border:none; box-shadow: 0 4px 0 #886b1d;" onclick="openStory()">BEGIN THE SAGA</button>
                 </div>
             </div>
 
@@ -126,14 +156,11 @@
             </div>
 
             <div class="page left-page">
-                <h2 id="chapter-title" style="color:var(--royal-red); font-family:'Cinzel Decorative'; border-bottom: 2px solid var(--gold);"></h2>
+                <h2 id="chapter-title"></h2>
                 <div id="chapter-body"></div>
             </div>
 
-            <div class="page right-page">
-                <div id="collage"></div>
-            </div>
-
+            <div class="page right-page"><div id="collage"></div></div>
             <div id="page-turner"></div>
 
             <div class="controls" id="nav-controls">
@@ -144,9 +171,7 @@
     </div>
 
     <script>
-        let current = 0;
-        let zCounter = 100;
-
+        // ... (Chapters Array from before)
         const chapters = [
             { t: "The Closing Rank", b: "<p>Once, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>", imgs: ["5.jpeg", "6.jpeg"] },
             { t: "The Barista 'Non-Date'", b: "<p>In Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>", imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"] },
@@ -156,10 +181,13 @@
             { t: "The Wedding 2025", b: "<p>We traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany.</p>", imgs: ["30.jpeg", "31.jpeg", "32.jpeg"] }
         ];
 
+        let current = 0; let zCounter = 100;
+
         function openStory() { document.getElementById('book-cover').classList.add('cover-open'); updateContent(); }
 
         function renderCollage(imgs) {
-            const area = document.getElementById('collage'); area.innerHTML = '';
+            const area = document.getElementById('collage'); 
+            area.innerHTML = '';
             imgs.forEach((name, i) => {
                 const frame = document.createElement('div'); frame.className = 'photo-frame';
                 const rotate = Math.random() * 20 - 10;
@@ -181,15 +209,33 @@
             document.getElementById('next').innerText = current === chapters.length - 1 ? "FINISH ➔" : "NEXT ➔";
         }
 
+        // SYNC LOCK TO PREVENT BLINKING
         function step(dir) {
             if (dir === 1 && current === chapters.length - 1) {
                 document.getElementById('final-page').style.display = 'flex';
                 return;
             }
+
             const turner = document.getElementById('page-turner');
+            const lp = document.getElementById('lp-content');
+            
+            // Start Turn
             turner.classList.add('turning');
-            setTimeout(() => { current += dir; updateContent(); }, 400);
-            setTimeout(() => { turner.classList.remove('turning'); }, 1000);
+            lp.style.opacity = '0'; // Fade out text
+
+            // SWAP CONTENT AT THE BLIND SPOT (500ms)
+            setTimeout(() => {
+                current += dir;
+                updateContent();
+            }, 500);
+
+            // RESET TURNER
+            setTimeout(() => {
+                turner.style.transition = 'none';
+                turner.classList.remove('turning');
+                lp.style.opacity = '1';
+                setTimeout(() => turner.style.transition = 'transform 1s cubic-bezier(0.645, 0.045, 0.355, 1)', 50);
+            }, 1000);
         }
 
         function attachDrag(el) {
@@ -200,6 +246,7 @@
                 isDragging = true; el.style.zIndex = ++zCounter;
                 const t = e.touches ? e.touches[0] : e;
                 startX = t.clientX; startY = t.clientY; initX = el.offsetLeft; initY = el.offsetTop;
+                el.style.transition = "none";
             };
             const move = (e) => {
                 if (!isDragging || el.classList.contains('zoomed')) return;
