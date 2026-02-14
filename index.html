@@ -23,160 +23,135 @@
         #book-container {
             width: 90vw; height: 85vh; max-width: 1100px;
             perspective: 3000px;
+            position: relative;
         }
 
-        #book {
-            width: 100%; height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            background: var(--parchment);
-            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
+        /* HARD COVERS */
+        .book-cover {
+            position: absolute; width: 100%; height: 100%;
+            background-color: var(--royal-red); background-image: var(--leather);
+            color: white; z-index: 3000; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            transform-origin: left; transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+            border-left: 15px solid #280202; border-radius: 5px 25px 25px 5px;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+        }
+
+        .cover-border { border: 4px double var(--gold); padding: 40px; position: relative; width: 60%; height: 60%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+        .cover-open { transform: rotateY(-140deg); pointer-events: none; opacity: 0; transition: transform 1.2s, opacity 0.1s 1.1s; }
+        
+        #final-page {
+            position: absolute; width: 100%; height: 100%;
+            background-color: var(--royal-red); background-image: var(--leather);
+            z-index: 4000; color: white; display: none;
+            flex-direction: column; justify-content: center; align-items: center;
             border-radius: 5px 25px 25px 5px;
         }
 
-        /* VINTAGE RING BINDER */
+        /* THE INTERNAL ALBUM (Hidden until cover opens) */
+        #album-content {
+            width: 100%; height: 100%;
+            position: relative;
+            display: none; /* Controlled by JS */
+            background: #222; /* Dark gap behind rings */
+            border-radius: 5px 25px 25px 5px;
+        }
+
+        /* RING BINDER */
         .ring-binder {
             position: absolute; left: 50%; top: 5%; bottom: 5%; width: 50px;
             transform: translateX(-50%); z-index: 500;
             display: flex; flex-direction: column; justify-content: space-around;
             align-items: center; pointer-events: none;
         }
-        .ring {
-            width: 45px; height: 14px;
-            background: linear-gradient(to right, #8a6d3b, #d4af37 50%, #8a6d3b);
-            border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-        }
-
-        /* CLEAN HARDBOUND COVERS */
-        .book-cover {
-            position: absolute; width: 100%; height: 100%;
-            background-color: var(--royal-red); background-image: var(--leather);
-            color: white; z-index: 1000; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-            transform-origin: left; transition: transform 1.5s cubic-bezier(0.645, 0.045, 0.355, 1);
-            border-left: 20px solid #280202; border-radius: 10px 25px 25px 10px;
-            backface-visibility: hidden;
-        }
-
-        .cover-border {
-            border: 4px double var(--gold);
-            padding: 50px; margin: 20px;
-            display: flex; flex-direction: column; align-items: center;
-        }
-
-        .cover-open { transform: rotateY(-145deg); pointer-events: none; visibility: hidden; }
-        
-        #final-page {
-            position: absolute; width: 100%; height: 100%;
-            background-color: var(--royal-red); background-image: var(--leather);
-            z-index: 2000; color: white; display: none;
-            flex-direction: column; justify-content: center; align-items: center;
-            border-radius: 10px 25px 25px 10px;
-        }
+        .ring { width: 45px; height: 12px; background: linear-gradient(to right, #8a6d3b, #d4af37 50%, #8a6d3b); border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.4); }
 
         /* PAGES */
         .page { 
-            width: calc(50% - 30px); height: calc(100% - 60px); 
+            width: calc(50% - 25px); height: calc(100% - 60px); 
             position: absolute; top: 30px; padding: 40px; box-sizing: border-box; 
-            background: var(--parchment); border-radius: 5px;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.05);
-            transition: opacity 0.4s;
+            background: var(--parchment); z-index: 10;
         }
-        .left-page { left: 20px; z-index: 10; border-right: 2px solid #ccc; }
-        .right-page { right: 20px; z-index: 10; overflow: hidden; border-left: 2px solid #ccc; }
-
-        /* HOLE PUNCHES */
-        .page::after {
-            content: ""; position: absolute; top: 0; bottom: 0; width: 20px;
-            background-image: radial-gradient(circle, #222 35%, transparent 45%);
-            background-size: 100% 11.11%; z-index: 20;
+        /* Holes are built INTO the page background so they never "randomly appear" */
+        .page-holes {
+            background-image: 
+                radial-gradient(circle, #222 35%, transparent 45%),
+                var(--parchment);
+            background-size: 20px 11.11%, 100% 100%;
+            background-repeat: repeat-y, no-repeat;
         }
-        .left-page::after { right: 5px; }
-        .right-page::after { left: 5px; }
+        .left-page { left: 0; border-radius: 5px 0 0 5px; background-position: right 5px center, center; }
+        .right-page { right: 0; border-radius: 0 5px 5px 0; overflow: hidden; background-position: left 5px center, center; }
 
-        /* IMAGES */
+        /* PHOTOS */
         .photo-frame {
             position: absolute; background: #fff; padding: 8px 8px 30px 8px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3); width: 160px;
-            cursor: grab; user-select: none; touch-action: none;
-            opacity: 0; transform: scale(0.5);
-            transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); width: 150px;
+            cursor: grab; opacity: 0; transform: scale(0.5);
+            transition: opacity 0.5s, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .photo-frame.visible { opacity: 1; transform: scale(1) rotate(var(--r)); }
         .photo-frame img { width: 100%; height: auto; pointer-events: none; display: block; }
-        
-        .photo-frame.zoomed {
-            position: fixed !important; top: 50% !important; left: 50% !important;
-            transform: translate(-50%, -50%) scale(2) !important; z-index: 3000 !important;
-        }
 
-        #page-turner {
-            position: absolute; right: 20px; width: calc(50% - 30px); height: calc(100% - 60px);
-            top: 30px; background: var(--parchment); transform-origin: left;
-            transition: transform 0.8s ease-in-out; z-index: 400;
-            pointer-events: none; visibility: hidden;
-        }
+        #page-turner { position: absolute; right: 0; width: calc(50% - 25px); height: calc(100% - 60px); top: 30px; background: var(--parchment); transform-origin: left; transition: transform 0.8s ease-in-out; z-index: 400; visibility: hidden; }
         .turning { visibility: visible !important; transform: rotateY(-180deg); }
 
-        .controls {
-            position: absolute; bottom: 30px; width: 100%;
-            display: flex; justify-content: center; gap: 80px; z-index: 2100;
-        }
-        .controls span { 
-            cursor: pointer; background: rgba(255,255,255,0.9); 
-            padding: 8px 25px; border-radius: 30px; 
-            font-family: 'Cinzel Decorative'; font-weight: bold; color: var(--royal-red);
-        }
+        /* BUTTONS */
+        #yes-btn { background: var(--gold); color: black; padding: 15px 40px; cursor: pointer; font-family: 'Cinzel Decorative'; font-weight: bold; border: none; margin-bottom: 20px; }
+        #no-btn { position: absolute; background: transparent; color: white; border: 1px solid var(--gold); padding: 8px 20px; border-radius: 20px; cursor: pointer; transition: 0.1s; }
+
+        .nav-controls { position: absolute; bottom: 20px; width: 100%; display: none; justify-content: center; gap: 80px; z-index: 5000; }
+        .nav-controls span { cursor: pointer; background: white; padding: 8px 25px; border-radius: 30px; font-family: 'Cinzel Decorative'; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
 
     <div id="book-container">
-        <div class="ring-binder">
-            <div class="ring"></div><div class="ring"></div><div class="ring"></div>
-            <div class="ring"></div><div class="ring"></div><div class="ring"></div>
-            <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+        <div id="book-cover" class="book-cover">
+            <div class="cover-border">
+                <div style="font-family: 'Great Vibes'; font-size: 2.5rem; color: var(--gold);">The Chronicles of</div>
+                <h1 style="font-family: 'Cinzel Decorative'; font-size: 3.5rem; margin: 10px 0; color: var(--gold);">#ViGotKOMpany</h1>
+                <button id="yes-btn" onclick="openSaga()">OPEN SAGA</button>
+                <button id="no-btn" onmouseover="danceNo()">NO</button>
+            </div>
         </div>
 
-        <div id="book">
-            <div id="book-cover" class="book-cover">
-                <div class="cover-border">
-                    <div style="font-family: 'Great Vibes'; font-size: 3rem; color: var(--gold);">The Chronicles of</div>
-                    <h1 style="font-family: 'Cinzel Decorative'; font-size: 4rem; margin: 15px 0; color: var(--gold);">#ViGotKOMpany</h1>
-                    <button onclick="openStory()" style="background:var(--gold); color:black; padding:15px 40px; cursor:pointer; font-family:'Cinzel Decorative'; font-weight:bold; border:none; border-radius: 5px;">OPEN ALBUM</button>
-                </div>
+        <div id="final-page">
+            <div class="cover-border">
+                <div style="font-family: 'Great Vibes'; font-size: 4rem; color: var(--gold);">And so...</div>
+                <h1 style="font-family: 'Cinzel Decorative'; font-size: 5rem; margin: 20px 0; color: var(--gold);">FOREVER BEGINS</h1>
+            </div>
+        </div>
+
+        <div id="album-content">
+            <div class="ring-binder">
+                <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+                <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+                <div class="ring"></div><div class="ring"></div><div class="ring"></div>
             </div>
 
-            <div id="final-page">
-                <div class="cover-border">
-                    <div style="font-family: 'Great Vibes'; font-size: 4rem; color: var(--gold);">And so...</div>
-                    <h1 style="font-family: 'Cinzel Decorative'; font-size: 5rem; margin: 20px 0; color: var(--gold);">FOREVER BEGINS</h1>
-                    <div style="font-family: 'Cinzel Decorative'; font-size: 1.2rem; letter-spacing: 5px; color: var(--gold);">#VIGOTKOMPANY</div>
-                </div>
+            <div class="page left-page page-holes">
+                <h2 id="ch-title" style="color:var(--royal-red); font-family:'Cinzel Decorative';"></h2>
+                <div id="ch-body"></div>
             </div>
 
-            <div class="page left-page">
-                <h2 id="chapter-title" style="color:var(--royal-red); font-family:'Cinzel Decorative'; border-bottom: 2px solid var(--gold);"></h2>
-                <div id="chapter-body"></div>
+            <div class="page right-page page-holes">
+                <div id="collage-area"></div>
             </div>
 
-            <div class="page right-page">
-                <div id="collage"></div>
-            </div>
+            <div id="page-turner" class="page-holes"></div>
+        </div>
 
-            <div id="page-turner"></div>
-
-            <div class="controls" id="nav-controls">
-                <span id="prev" style="visibility:hidden" onclick="step(-1)">↞ BACK</span>
-                <span id="next" onclick="step(1)">NEXT ➔</span>
-            </div>
+        <div class="nav-controls" id="nav-ui">
+            <span id="prev" style="visibility:hidden" onclick="step(-1)">↞ BACK</span>
+            <span id="next" onclick="step(1)">NEXT ➔</span>
         </div>
     </div>
 
     <script>
         let current = 0;
-        let zCounter = 100;
-
+        let zIdx = 100;
         const chapters = [
             { t: "The Closing Rank", b: "<p>Once, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>", imgs: ["5.jpeg", "6.jpeg"] },
             { t: "The Barista 'Non-Date'", b: "<p>In Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>", imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"] },
@@ -186,33 +161,39 @@
             { t: "The Wedding 2025", b: "<p>We traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany.</p>", imgs: ["30.jpeg", "31.jpeg", "32.jpeg"] }
         ];
 
-        function openStory() {
+        function openSaga() {
             document.getElementById('book-cover').classList.add('cover-open');
-            updateContent();
+            document.getElementById('album-content').style.display = 'block';
+            document.getElementById('nav-ui').style.display = 'flex';
+            updatePage();
         }
 
-        function renderCollage(imgs) {
-            const area = document.getElementById('collage');
+        function danceNo() {
+            const no = document.getElementById('no-btn');
+            no.style.left = (Math.random() * 60 + 20) + "%";
+            no.style.top = (Math.random() * 60 + 20) + "%";
+        }
+
+        function updatePage() {
+            const ch = chapters[current];
+            document.getElementById('ch-title').innerText = ch.t;
+            document.getElementById('ch-body').innerHTML = ch.b;
+            
+            const area = document.getElementById('collage-area');
             area.innerHTML = '';
-            imgs.forEach((name, i) => {
+            ch.imgs.forEach((img, i) => {
                 const frame = document.createElement('div');
                 frame.className = 'photo-frame';
-                const rotate = Math.random() * 20 - 10;
-                frame.style.left = `calc(50% - 80px + ${(Math.random() - 0.5) * 120}px)`;
-                frame.style.top = `calc(50% - 110px + ${(Math.random() - 0.5) * 100}px)`;
-                frame.style.setProperty('--r', rotate + 'deg');
-                frame.innerHTML = `<img src="imgs/${name}" onerror="this.src='https://via.placeholder.com/150x180?text=Photo'">`;
+                const r = Math.random() * 20 - 10;
+                frame.style.left = `calc(50% - 75px + ${(Math.random() - 0.5) * 100}px)`;
+                frame.style.top = `calc(50% - 100px + ${(Math.random() - 0.5) * 80}px)`;
+                frame.style.setProperty('--r', r + 'deg');
+                frame.innerHTML = `<img src="imgs/${img}" onerror="this.src='https://via.placeholder.com/150x180?text=Photo'">`;
                 area.appendChild(frame);
-                attachDrag(frame);
+                dragMe(frame);
                 setTimeout(() => frame.classList.add('visible'), 100 + (i * 80));
             });
-        }
 
-        function updateContent() {
-            const ch = chapters[current];
-            document.getElementById('chapter-title').innerText = ch.t;
-            document.getElementById('chapter-body').innerHTML = ch.b;
-            renderCollage(ch.imgs);
             document.getElementById('prev').style.visibility = current === 0 ? 'hidden' : 'visible';
             document.getElementById('next').innerText = current === chapters.length - 1 ? "FINISH ➔" : "NEXT ➔";
         }
@@ -220,43 +201,35 @@
         function step(dir) {
             if (dir === 1 && current === chapters.length - 1) {
                 document.getElementById('final-page').style.display = 'flex';
-                document.getElementById('nav-controls').style.display = 'none';
+                document.getElementById('nav-ui').style.display = 'none';
                 return;
             }
             const turner = document.getElementById('page-turner');
             turner.classList.add('turning');
             setTimeout(() => {
                 current += dir;
-                updateContent();
+                updatePage();
             }, 400);
             setTimeout(() => { turner.classList.remove('turning'); }, 1000);
         }
 
-        function attachDrag(el) {
-            let isDragging = false, startX, startY, initX, initY, lastTap = 0;
-            const start = (e) => {
-                const now = Date.now();
-                if (now - lastTap < 300) { el.classList.toggle('zoomed'); return; }
-                lastTap = now;
-                if (el.classList.contains('zoomed')) return;
-                isDragging = true;
-                el.style.zIndex = ++zCounter;
+        function dragMe(el) {
+            let active = false, startX, startY, initX, initY;
+            const down = (e) => {
+                active = true; el.style.zIndex = ++zIdx;
                 const t = e.touches ? e.touches[0] : e;
                 startX = t.clientX; startY = t.clientY;
                 initX = el.offsetLeft; initY = el.offsetTop;
             };
             const move = (e) => {
-                if (!isDragging || el.classList.contains('zoomed')) return;
+                if (!active) return;
                 const t = e.touches ? e.touches[0] : e;
                 el.style.left = (initX + (t.clientX - startX)) + "px";
                 el.style.top = (initY + (t.clientY - startY)) + "px";
             };
-            el.addEventListener('mousedown', start);
-            el.addEventListener('touchstart', start, {passive: false});
-            window.addEventListener('mousemove', move);
-            window.addEventListener('touchmove', move, {passive: false});
-            window.addEventListener('mouseup', () => isDragging = false);
-            window.addEventListener('touchend', () => isDragging = false);
+            el.onmousedown = el.ontouchstart = down;
+            window.onmousemove = window.ontouchmove = move;
+            window.onmouseup = window.ontouchend = () => active = false;
         }
     </script>
 </body>
