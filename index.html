@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>#ViGotKOMpany | The Saga</title>
+    <title>#ViGotKOMpany | Ring-Bound Saga</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=MedievalSharp&family=Great+Vibes&display=swap" rel="stylesheet">
     
     <style>
@@ -13,21 +13,22 @@
             --shimmer: linear-gradient(135deg, #d4af37 0%, #f7ef8a 50%, #d4af37 100%);
             --parchment: #fdfaf0;
             --leather: url('https://www.transparenttextures.com/patterns/leather.png');
-            --paper-edge: #e8e4d5;
+            --ring-gold: linear-gradient(to right, #8a6d3b, #d4af37 50%, #8a6d3b);
         }
 
         body, html { 
             margin: 0; padding: 0; background: #0a0101; 
             height: 100vh; display: flex; justify-content: center; align-items: center;
             overflow: hidden; font-family: 'MedievalSharp', serif;
+            touch-action: none;
         }
 
         #book-container {
-            width: 90vw; height: 85vh; max-width: 1100px;
+            width: 92vw; height: 88vh; max-width: 1150px;
             perspective: 3000px;
+            position: relative;
         }
 
-        /* THE HARD COVER BASE */
         #book {
             width: 100%; height: 100%;
             position: relative;
@@ -35,24 +36,23 @@
             background: var(--royal-red);
             background-image: var(--leather);
             box-shadow: 0 50px 100px rgba(0,0,0,0.9);
-            border-radius: 5px 25px 25px 5px;
-            border: 2px solid #280202;
+            border-radius: 10px 25px 25px 10px;
         }
 
-        /* SPINE GROOVE */
-        #book::before {
-            content: ""; position: absolute; left: 50%; width: 45px; height: 100%;
-            background: linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.4));
-            z-index: 100; transform: translateX(-50%); pointer-events: none;
+        /* METALLIC GOLD RINGS */
+        .ring-binder {
+            position: absolute; left: 50%; top: 5%; bottom: 5%; width: 50px;
+            transform: translateX(-50%); z-index: 500;
+            display: flex; flex-direction: column; justify-content: space-around;
+            align-items: center; pointer-events: none;
         }
 
-        /* THE PAGE STACK EFFECT (The white edges you see on the side) */
-        #book::after {
-            content: ""; position: absolute; top: 10px; bottom: 10px; right: 5px; width: 15px;
-            background: repeating-linear-gradient(to bottom, #fff 0px, #fff 1px, #ddd 2px);
-            border-radius: 0 10px 10px 0;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.2);
-            z-index: 5;
+        .ring {
+            width: 45px; height: 14px;
+            background: var(--ring-gold);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.4);
+            position: relative;
         }
 
         /* COVERS */
@@ -61,29 +61,49 @@
             background-color: var(--royal-red); background-image: var(--leather);
             color: white; z-index: 1000; display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center;
-            transform-origin: left; transition: transform 1.5s ease-in-out;
-            border-left: 20px solid #280202; border-radius: 5px 25px 25px 5px;
+            transform-origin: left; transition: transform 1.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+            border-left: 20px solid #280202; border-radius: 10px 25px 25px 10px;
             backface-visibility: hidden;
         }
-        .cover-open { transform: rotateY(-140deg); pointer-events: none; }
+        .cover-open { transform: rotateY(-150deg); pointer-events: none; visibility: hidden; }
+
+        /* FINAL SCREEN */
+        #final-page {
+            position: absolute; width: 100%; height: 100%;
+            background-color: var(--royal-red); background-image: var(--leather);
+            z-index: 2000; color: white; display: none;
+            flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; border-radius: 10px 25px 25px 10px;
+        }
+
+        .gold-foil { background: var(--shimmer); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         /* PAGES */
         .page { 
-            width: calc(50% - 20px); height: calc(100% - 40px); 
-            position: absolute; top: 20px; 
-            padding: 40px; box-sizing: border-box; 
-            background: var(--parchment);
-            border-radius: 5px 15px 15px 5px; /* Rounded corners for pages */
+            width: calc(50% - 30px); height: calc(100% - 60px); 
+            position: absolute; top: 30px; padding: 40px; box-sizing: border-box; 
+            background: var(--parchment); border-radius: 5px;
             box-shadow: inset 0 0 50px rgba(0,0,0,0.05);
+            transition: opacity 0.4s;
         }
-        .left-page { left: 20px; border-right: 1px solid rgba(0,0,0,0.1); z-index: 10; }
-        .right-page { right: 20px; z-index: 10; overflow: hidden; border-radius: 15px 5px 5px 15px; }
+        
+        /* HOLE PUNCHES */
+        .page::after {
+            content: ""; position: absolute; top: 0; bottom: 0; width: 20px;
+            background-image: radial-gradient(circle, #222 35%, transparent 45%);
+            background-size: 100% 11.11%; /* Matches ring distribution */
+            z-index: 20;
+        }
+        .left-page { left: 20px; z-index: 10; border-right: 2px solid #ccc; }
+        .left-page::after { right: 5px; }
+        .right-page { right: 20px; z-index: 10; overflow: hidden; border-left: 2px solid #ccc; }
+        .right-page::after { left: 5px; }
 
-        /* IMAGE SCALING */
+        /* SCRAPBOOK IMAGES */
         #collage { width: 100%; height: 100%; position: relative; }
         .photo-frame {
-            position: absolute; background: #fff; padding: 6px 6px 25px 6px;
-            box-shadow: 2px 5px 15px rgba(0,0,0,0.3); width: 150px;
+            position: absolute; background: #fff; padding: 8px 8px 30px 8px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3); width: 160px;
             cursor: grab; user-select: none; touch-action: none;
             opacity: 0; transform: scale(0.5);
             transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -91,18 +111,22 @@
         .photo-frame.visible { opacity: 1; transform: scale(1) rotate(var(--r)); }
         .photo-frame img { width: 100%; height: auto; pointer-events: none; display: block; }
         
+        .photo-frame.zoomed {
+            position: fixed !important; top: 50% !important; left: 50% !important;
+            transform: translate(-50%, -50%) scale(2) !important; z-index: 3000 !important;
+            cursor: zoom-out;
+        }
+
         /* PAGE TURNER */
         #page-turner {
-            position: absolute; right: 20px; width: calc(50% - 20px); height: calc(100% - 40px);
-            top: 20px; background: var(--parchment); transform-origin: left;
-            transition: transform 0.8s ease-in-out; z-index: 500;
-            pointer-events: none; visibility: hidden;
-            border-radius: 5px 15px 15px 5px;
-            box-shadow: -10px 0 20px rgba(0,0,0,0.1);
+            position: absolute; right: 20px; width: calc(50% - 30px); height: calc(100% - 60px);
+            top: 30px; background: var(--parchment); transform-origin: left;
+            transition: transform 0.8s ease-in-out; z-index: 400;
+            pointer-events: none; visibility: hidden; border-radius: 5px;
         }
         .turning { visibility: visible !important; transform: rotateY(-180deg); }
 
-        /* BUTTONS */
+        /* NAVIGATION */
         .controls {
             position: absolute; bottom: 30px; width: 100%;
             display: flex; justify-content: center; gap: 80px; z-index: 2100;
@@ -111,35 +135,45 @@
             cursor: pointer; background: rgba(255,255,255,0.9); 
             padding: 8px 25px; border-radius: 30px; 
             font-family: 'Cinzel Decorative'; font-weight: bold; color: var(--royal-red);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
 
     <div id="book-container">
-        <div id="book-cover" class="book-cover">
-            <div style="border: 4px double var(--gold); padding: 40px;">
-                <div style="font-family: 'Great Vibes'; font-size: 3rem; background: var(--shimmer); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">The Chronicles of</div>
-                <h1 style="font-size: 4rem; margin: 15px 0; background: var(--shimmer); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">#ViGotKOMpany</h1>
-                <button onclick="openStory()" style="background:var(--gold); padding:15px 40px; cursor:pointer; font-family:'Cinzel Decorative'; font-weight:bold; border:none;">OPEN BOOK</button>
-            </div>
-        </div>
-
-        <div id="final-page" style="position: absolute; width: 100%; height: 100%; background-color: var(--royal-red); background-image: var(--leather); z-index: 2000; color: white; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 5px 25px 25px 5px;">
-            <div style="border: 4px double var(--gold); padding: 40px;">
-                <div style="font-family: 'Great Vibes'; font-size: 4rem; background: var(--shimmer); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">And so...</div>
-                <h1 style="font-size: 5rem; margin: 20px 0; background: var(--shimmer); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">FOREVER BEGINS</h1>
-                <div style="font-family: 'Cinzel Decorative'; font-size: 1.2rem; letter-spacing: 5px;">#VIGOTKOMPANY</div>
-            </div>
+        <div class="ring-binder">
+            <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+            <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+            <div class="ring"></div><div class="ring"></div><div class="ring"></div>
         </div>
 
         <div id="book">
+            <div id="book-cover" class="book-cover">
+                <div style="border: 4px double var(--gold); padding: 40px; margin: 20px;">
+                    <div class="gold-foil" style="font-family: 'Great Vibes'; font-size: 3rem;">The Chronicles of</div>
+                    <h1 class="gold-foil" style="font-size: 4rem; margin: 15px 0;">#ViGotKOMpany</h1>
+                    <button onclick="openStory()" style="background:var(--gold); padding:15px 40px; cursor:pointer; font-family:'Cinzel Decorative'; font-weight:bold; border:none; box-shadow: 0 4px 0 #886b1d;">OPEN ALBUM</button>
+                </div>
+            </div>
+
+            <div id="final-page">
+                <div style="border: 4px double var(--gold); padding: 40px;">
+                    <div class="gold-foil" style="font-family: 'Great Vibes'; font-size: 4rem;">And so...</div>
+                    <h1 class="gold-foil" style="font-size: 5rem; margin: 20px 0;">FOREVER BEGINS</h1>
+                    <div class="gold-foil" style="font-size: 1.2rem; letter-spacing: 5px;">#VIGOTKOMPANY</div>
+                </div>
+            </div>
+
             <div class="page left-page">
                 <h2 id="chapter-title" style="color:var(--royal-red); font-family:'Cinzel Decorative'; border-bottom: 2px solid var(--gold);"></h2>
                 <div id="chapter-body"></div>
             </div>
 
-            <div class="page right-page"><div id="collage"></div></div>
+            <div class="page right-page">
+                <div id="collage"></div>
+            </div>
+
             <div id="page-turner"></div>
 
             <div class="controls" id="nav-controls">
@@ -150,55 +184,136 @@
     </div>
 
     <script>
-        // ... (Keep the script from the previous response exactly as is, it's fully compatible)
-        let current = 0; let zCounter = 100;
+        let current = 0;
+        let zCounter = 100;
+
         const chapters = [
-            { t: "The Closing Rank", b: "<p>Once, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>", imgs: ["5.jpeg", "6.jpeg"] },
-            { t: "The Barista 'Non-Date'", b: "<p>In Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>", imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"] },
-            { t: "The Hillside Proposal", b: "<p>Ganesh Chaturthi 2018. Recreating 'Om Shanti Oshana' at the TV Tower hill—in 35° heat and slippers!</p>", imgs: ["7.jpeg", "9.jpeg", "10.jpeg", "11.jpeg", "12.jpeg"] },
-            { t: "Milestones", b: "<p>Intern, and beyond!</p>", imgs: ["13.jpeg", "14.jpeg", "15.jpeg", "16.jpeg", "20.jpeg", "21.jpeg"] },
-            { t: "The NEVER Ending Long Distance", b: "<p>We survived it!</p>", imgs: ["22.jpeg", "23.jpeg", "24.jpeg", "25.jpeg", "26.jpeg", "27.jpeg", "28.jpeg", "29.jpeg"] },
-            { t: "The Wedding 2025", b: "<p>We traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany.</p>", imgs: ["30.jpeg", "31.jpeg", "32.jpeg"] }
+            {
+                t: "The Closing Rank",
+                b: "<p>Once, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>",
+                imgs: ["5.jpeg", "6.jpeg"],
+            },
+            {
+                t: "The Barista 'Non-Date'",
+                b: "<p>In Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>",
+                imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"],
+            },
+            {
+                t: "The Hillside Proposal",
+                b: "<p>Ganesh Chaturthi 2018. Recreating 'Om Shanti Oshana' at the TV Tower hill—in 35° heat and slippers!</p>",
+                imgs: ["7.jpeg", "9.jpeg", "10.jpeg", "11.jpeg", "12.jpeg"],
+            },
+            {
+                t: "Milestones",
+                b: "<p>Intern, and beyond!</p>",
+                imgs: [
+                    "13.jpeg",
+                    "14.jpeg",
+                    "15.jpeg",
+                    "16.jpeg",
+                    "20.jpeg",
+                    "21.jpeg",
+                ],
+            },
+            {
+                t: "The NEVER Ending Long Distance",
+                b: "<p>We survived it!</p>",
+                imgs: [
+                    "22.jpeg",
+                    "23.jpeg",
+                    "24.jpeg",
+                    "25.jpeg",
+                    "26.jpeg",
+                    "27.jpeg",
+                    "28.jpeg",
+                    "29.jpeg",
+                ],
+            },
+            {
+                t: "The Wedding 2025",
+                b: "<p><span class='drop-cap'>W</span>e traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany.</p>",
+                imgs: ["30.jpeg", "31.jpeg", "32.jpeg"],
+            }
         ];
 
-        function openStory() { document.getElementById('book-cover').classList.add('cover-open'); updateContent(); }
+        function openStory() {
+            document.getElementById('book-cover').classList.add('cover-open');
+            updateContent();
+        }
+
         function renderCollage(imgs) {
-            const area = document.getElementById('collage'); area.innerHTML = '';
+            const area = document.getElementById('collage');
+            area.innerHTML = '';
+            
             imgs.forEach((name, i) => {
-                const frame = document.createElement('div'); frame.className = 'photo-frame'; const rotate = Math.random() * 20 - 10;
-                frame.style.left = `calc(50% - 75px + ${(Math.random() - 0.5) * 100}px)`; frame.style.top = `calc(50% - 100px + ${(Math.random() - 0.5) * 80}px)`;
+                const frame = document.createElement('div');
+                frame.className = 'photo-frame';
+                const rotate = Math.random() * 20 - 10;
+                frame.style.left = `calc(50% - 80px + ${(Math.random() - 0.5) * 120}px)`;
+                frame.style.top = `calc(50% - 110px + ${(Math.random() - 0.5) * 100}px)`;
                 frame.style.setProperty('--r', rotate + 'deg');
                 frame.innerHTML = `<img src="imgs/${name}" onerror="this.src='https://via.placeholder.com/150x180?text=Photo'">`;
-                area.appendChild(frame); attachDrag(frame); setTimeout(() => frame.classList.add('visible'), 100 + (i * 80));
+                area.appendChild(frame);
+                attachDrag(frame);
+                setTimeout(() => frame.classList.add('visible'), 100 + (i * 80));
             });
         }
+
         function updateContent() {
-            const ch = chapters[current]; document.getElementById('chapter-title').innerText = ch.t; document.getElementById('chapter-body').innerHTML = ch.b;
+            const ch = chapters[current];
+            document.getElementById('chapter-title').innerText = ch.t;
+            document.getElementById('chapter-body').innerHTML = ch.b;
             renderCollage(ch.imgs);
             document.getElementById('prev').style.visibility = current === 0 ? 'hidden' : 'visible';
             document.getElementById('next').innerText = current === chapters.length - 1 ? "FINISH ➔" : "NEXT ➔";
         }
+
         function step(dir) {
-            if (dir === 1 && current === chapters.length - 1) { document.getElementById('final-page').style.display = 'flex'; document.getElementById('nav-controls').style.display = 'none'; return; }
-            const turner = document.getElementById('page-turner'); turner.classList.add('turning');
-            setTimeout(() => { current += dir; updateContent(); }, 400);
-            setTimeout(() => { turner.classList.remove('turning'); }, 1000);
+            if (dir === 1 && current === chapters.length - 1) {
+                document.getElementById('final-page').style.display = 'flex';
+                document.getElementById('nav-controls').style.display = 'none';
+                return;
+            }
+
+            const turner = document.getElementById('page-turner');
+            turner.classList.add('turning');
+            
+            setTimeout(() => {
+                current += dir;
+                updateContent();
+            }, 400);
+
+            setTimeout(() => {
+                turner.classList.remove('turning');
+            }, 1000);
         }
+
         function attachDrag(el) {
             let isDragging = false, startX, startY, initX, initY, lastTap = 0;
             const start = (e) => {
-                const now = Date.now(); if (now - lastTap < 300) { el.classList.toggle('zoomed'); return; } lastTap = now;
+                const now = Date.now();
+                if (now - lastTap < 300) { el.classList.toggle('zoomed'); return; }
+                lastTap = now;
                 if (el.classList.contains('zoomed')) return;
-                isDragging = true; el.style.zIndex = ++zCounter; const t = e.touches ? e.touches[0] : e;
-                startX = t.clientX; startY = t.clientY; initX = el.offsetLeft; initY = el.offsetTop;
+
+                isDragging = true;
+                el.style.zIndex = ++zCounter;
+                const t = e.touches ? e.touches[0] : e;
+                startX = t.clientX; startY = t.clientY;
+                initX = el.offsetLeft; initY = el.offsetTop;
             };
             const move = (e) => {
                 if (!isDragging || el.classList.contains('zoomed')) return;
-                const t = e.touches ? e.touches[0] : e; el.style.left = (initX + (t.clientX - startX)) + "px"; el.style.top = (initY + (t.clientY - startY)) + "px";
+                const t = e.touches ? e.touches[0] : e;
+                el.style.left = (initX + (t.clientX - startX)) + "px";
+                el.style.top = (initY + (t.clientY - startY)) + "px";
             };
-            el.addEventListener('mousedown', start); el.addEventListener('touchstart', start, {passive: false});
-            window.addEventListener('mousemove', move); window.addEventListener('touchmove', move, {passive: false});
-            window.addEventListener('mouseup', () => isDragging = false); window.addEventListener('touchend', () => isDragging = false);
+            el.addEventListener('mousedown', start);
+            el.addEventListener('touchstart', start, {passive: false});
+            window.addEventListener('mousemove', move);
+            window.addEventListener('touchmove', move, {passive: false});
+            window.addEventListener('mouseup', () => isDragging = false);
+            window.addEventListener('touchend', () => isDragging = false);
         }
     </script>
 </body>
