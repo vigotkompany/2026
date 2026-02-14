@@ -3,184 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>#ViGotKOMpany | Our Story</title>
+    <title>#ViGotKOMpany | The Saga</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=MedievalSharp&family=Great+Vibes&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --royal-red: #641212;
-            --gold: #ffd700;
+            --royal-red: #4a0404;
+            --gold: #d4af37;
             --parchment: #fdfaf0;
+            --leather: url('https://www.transparenttextures.com/patterns/leather.png');
+            --breezy: cubic-bezier(0.645, 0.045, 0.355, 1);
         }
 
-        body, html { margin: 0; padding: 0; background: var(--parchment); height: 100vh; font-family: 'MedievalSharp', serif; overflow: hidden; }
-        
-        /* Cover Page */
-        #cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--royal-red); color: white; z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1); }
-        .hide-cover { transform: translateY(-100%); pointer-events: none; }
-        
-        .title { font-family: 'Cinzel Decorative', serif; font-size: clamp(2.2rem, 8vw, 3.8rem); color: var(--gold); margin: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
-        #guilt-trip { height: 60px; color: var(--gold); margin-bottom: 20px; font-size: 1.3rem; font-style: italic; }
-
-        /* Buttons */
-        .btn-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 250px; position: relative; }
-        #yes-btn { padding: 18px 70px; font-size: 1.5rem; cursor: pointer; background: white; color: var(--royal-red); border: none; border-radius: 50px; font-weight: bold; z-index: 1200; font-family: 'Cinzel Decorative'; box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        #no-btn { position: fixed; padding: 10px 30px; cursor: pointer; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.5); border-radius: 50px; z-index: 1100; transition: all 0.2s ease; top: 65%; left: 70%; }
-
-        /* Story Container */
-        #story-container { width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; text-align: center; position: relative;}
-        
-        .text-section { max-width: 600px; min-height: 220px; margin-top: 20px; transition: all 0.5s ease; opacity: 1; transform: translateY(0); }
-        .fade-out { opacity: 0; transform: translateY(10px); }
-        
-        .drop-cap { font-family: 'Cinzel Decorative'; font-size: 4rem; color: var(--royal-red); float: left; line-height: 0.7; margin-right: 12px; margin-top: 8px; }
-        h2 { font-family: 'Cinzel Decorative'; color: var(--royal-red); margin: 15px 0; font-size: 1.8rem; letter-spacing: 2px; border-bottom: 2px solid var(--gold); display: inline-block; padding-bottom: 5px; }
-        
-        /* Images */
-        .images { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 550px; margin-top: 25px; }
-        .box { background: white; aspect-ratio: 1; border: 8px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.15); overflow: hidden; border-radius: 4px; transition: transform 0.5s ease; }
-        .box:hover { transform: scale(1.02) rotate(1deg); }
-        .box img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* Navigation */
-        .nav-bar { margin-top: auto; padding-bottom: 40px; display: flex; gap: 60px; font-family: 'Cinzel Decorative'; color: #ae9656; font-weight: bold; font-size: 1.1rem; }
-        .nav-bar span { cursor: pointer; padding: 10px; transition: color 0.3s; }
-        .nav-bar span:hover { color: var(--royal-red); }
-        
-        .valentine-text { font-family: 'Great Vibes', cursive; font-size: 3.5rem; color: var(--royal-red); margin-top: 15px; animation: heartbeat 1.5s infinite; }
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        /* 🫰 MASTER CURSOR */
+        *, body, html, a, button, span { 
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:24px'><text y='24'>🫰</text></svg>") 16 16, auto !important;
         }
+
+        body, html { 
+            margin: 0; padding: 0; background: #0a0101; 
+            height: 100vh; width: 100vw;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; font-family: 'MedievalSharp', serif;
+            touch-action: none;
+        }
+
+        #book-container {
+            width: 90vw; height: 85vh; max-width: 1100px;
+            perspective: 3000px;
+            position: relative;
+        }
+
+        /* FRONT COVER */
+        .book-cover {
+            position: absolute; width: 100%; height: 100%;
+            background-color: var(--royal-red); background-image: var(--leather);
+            color: white; z-index: 5000; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            transform-origin: left; transition: transform 1.5s var(--breezy), opacity 0.5s;
+            border-left: 15px solid #280202; border-radius: 5px 25px 25px 5px;
+            backface-visibility: hidden;
+        }
+        .cover-open { transform: rotateY(-145deg); pointer-events: none; opacity: 0; visibility: hidden; }
+
+        /* FINAL BACK COVER - Highest Priority */
+        #final-page {
+            position: absolute; width: 100%; height: 100%;
+            background-color: var(--royal-red); background-image: var(--leather);
+            z-index: 7000; color: white; display: none; /* Higher than UI and Album */
+            flex-direction: column; justify-content: center; align-items: center;
+            border-radius: 5px 25px 25px 5px; text-align: center;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
+        }
+
+        .cover-border { 
+            border: 4px double var(--gold); 
+            padding: 50px; display: flex; flex-direction: column; 
+            align-items: center; position: relative;
+        }
+
+        /* INTERNAL ALBUM */
+        #album-content {
+            width: 100%; height: 100%;
+            position: relative; display: none; background: #1a1a1a;
+            border-radius: 5px 25px 25px 5px; box-shadow: 0 50px 100px rgba(0,0,0,0.9);
+            transform-style: preserve-3d;
+        }
+
+        .page { 
+            width: 50%; height: 100%; position: absolute; top: 0; padding: 50px; box-sizing: border-box; 
+            background: var(--parchment); z-index: 10;
+        }
+        .left-page { left: 0; border-radius: 5px 0 0 5px; border-right: 1px solid rgba(0,0,0,0.1); overflow: hidden; }
+        .right-page { right: 0; border-radius: 0 5px 5px 0; display: flex; flex-direction: column; }
+
+        /* PHOTO FRAMES */
+        .photo-frame {
+            position: absolute; background: #fff; padding: 10px 10px 35px 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3); width: 170px;
+            opacity: 0; transform: scale(0.8);
+            transition: opacity 1s var(--breezy), transform 1s var(--breezy);
+            z-index: 20;
+        }
+        .photo-frame.visible { opacity: 1; transform: scale(1) rotate(var(--r)); }
+        .photo-frame img { width: 100%; height: auto; display: block; pointer-events: none; }
+
+        #page-turner { 
+            position: absolute; right: 0; width: 50%; height: 100%; top: 0; 
+            background: var(--parchment); transform-origin: left; 
+            transition: transform 1.2s var(--breezy); z-index: 400; visibility: hidden; 
+        }
+        .turning { visibility: visible !important; transform: rotateY(-180deg); }
+
+        /* NAV CONTROLS */
+        .nav-controls { 
+            position: absolute; bottom: 30px; width: 100%; 
+            display: none; justify-content: center; gap: 100px; 
+            z-index: 5500; pointer-events: none;
+        }
+        .nav-controls span { 
+            pointer-events: auto; background: white; padding: 12px 35px; border-radius: 40px; 
+            font-family: 'Cinzel Decorative'; font-weight: bold; color: var(--royal-red); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+
+        #no-btn { position: absolute; background: transparent; color: white; border: 1px solid var(--gold); padding: 8px 20px; border-radius: 20px; z-index: 5100; transition: 0.1s; }
     </style>
 </head>
 <body>
 
-    <div id="cover">
-        <div style="font-family: 'Great Vibes'; font-size: 2.5rem; color: var(--gold);">A Tale of Destiny</div>
-        <h1 class="title">#ViGotKOMpany</h1>
-        <div id="guilt-trip">Ready to see our story?</div>
-
-        <div class="btn-wrapper">
-            <button id="yes-btn" onclick="window.go()">YES</button>
-            <button id="no-btn" onmouseover="window.dance()" onclick="window.noGuilt()">NO</button>
-        </div>
-    </div>
-
-    <div id="story-container">
-        <div id="content-wrapper" class="text-section">
-            <h2 id="st-title">The Closing Rank</h2>
-            <div id="st-body">
-                <p><span class="drop-cap">O</span>nce, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In the middle of a chaotic FS lab, you passed me your notes—unaware that it was the start of #(NOT)VIMAL.</p>
+    <div id="book-container">
+        <div id="book-cover" class="book-cover">
+            <div class="cover-border">
+                <div style="font-family: 'Great Vibes'; font-size: 3rem; color: var(--gold);">The Chronicles of</div>
+                <h1 style="font-family: 'Cinzel Decorative'; font-size: 4rem; margin: 20px 0; color: var(--gold);">#ViGotKOMpany</h1>
+                <button onclick="openSaga()" style="background:var(--gold); padding:15px 45px; font-family:'Cinzel Decorative'; font-weight:bold; border:none; margin-bottom: 20px;">OPEN SAGA</button>
+                <button id="no-btn" onmouseover="danceNo()">NO</button>
             </div>
         </div>
 
-        <div class="images">
-            <div class="box"><img id="pic1" src="https://i.imgur.com/7S8V2mX.png"></div>
-            <div class="box"><img id="pic2" src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500"></div>
+        <div id="final-page">
+            <div class="cover-border">
+                <div style="font-family: 'Great Vibes'; font-size: 4rem; color: var(--gold);">And so...</div>
+                <h1 style="font-family: 'Cinzel Decorative'; font-size: 5rem; margin: 20px 0; color: var(--gold);">FOREVER BEGINS</h1>
+                <button onclick="restartSaga()" style="background:var(--gold); color:black; padding:15px 45px; font-family:'Cinzel Decorative'; font-weight:bold; border:none;">START OVER</button>
+            </div>
         </div>
 
-        <div class="nav-bar">
-            <span id="prev" style="visibility:hidden" onclick="window.step(-1)">↞ PREVIOUS</span>
-            <span id="next" onclick="window.step(1)">NEXT CHAPTER ➔</span>
+        <div id="album-content">
+            <div style="position: absolute; left: 50%; width: 40px; height: 100%; background: linear-gradient(to right, rgba(0,0,0,0.3), rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.3)); z-index: 500; transform: translateX(-50%); pointer-events: none;"></div>
+            <div class="page left-page"><div id="collage-area" style="width:100%; height:100%;"></div></div>
+            <div class="page right-page">
+                <h2 id="ch-title" style="color:var(--royal-red); font-family:'Cinzel Decorative'; border-bottom: 2px solid var(--gold);"></h2>
+                <div id="ch-body" style="font-size: 1.15rem; line-height: 1.7; color: #2c2c2c;"></div>
+            </div>
+            <div id="page-turner"></div>
+        </div>
+
+        <div class="nav-controls" id="nav-ui">
+            <span id="prev" style="visibility:hidden" onclick="step(-1)">↞ BACK</span>
+            <span id="next" onclick="step(1)">NEXT ➔</span>
         </div>
     </div>
 
     <script>
         let current = 0;
-        let yesScale = 1;
-        let tIdx = 0;
-
-        const trips = [
-            "Think about the Krushers! 🥤",
-            "But the 6 AM Podi Dosa drives... ☕",
-            "Dublin is cold alone! ❄️",
-            "I straightened my hair for this! 💇‍♀️",
-            "Biryani > Komal? Really? 🍛",
-            "Even the crocodiles want a YES! 🐊",
-            "Don't make me wait another 3 months! ✈️"
-        ];
+        let zIdx = 100;
+        let activeElement = null;
+        let startX, startY, initX, initY;
 
         const chapters = [
-            { 
-                t: "The Closing Rank", 
-                b: "<p><span class='drop-cap'>O</span>nce, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In the middle of a chaotic FS lab, you passed me your notes—unaware that it was the start of #(NOT)VIMAL. Who knew a lab record would lead to this?</p>", 
-                i1: "https://i.imgur.com/7S8V2mX.png", 
-                i2: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500" 
-            },
-            { 
-                t: "The Barista 'Non-Date'", 
-                b: "<p><span class='drop-cap'>I</span>n Nov 2017, we met at Barista for a 'treat.' We shared more than just Samosa Chat—there were blushes, laughs, and a spark neither of us could hide. It was followed by brain-freezing Krushers, which remains my favorite date-memory to this day.</p>", 
-                i1: "https://images.unsplash.com/photo-1601050690597-df056fb36792?w=500", 
-                i2: "https://images.unsplash.com/photo-1541167760496-162955ed8a9f?w=500" 
-            },
-            { 
-                t: "The Hillside Proposal", 
-                b: "<p><span class='drop-cap'>O</span>n Ganesh Chaturthi 2018, you channeled your inner Romantic Hero. Recreating my favorite 'Om Shanti Oshana' scene at the TV Tower hill—in 35° heat and slippers!—you finally held my hand with a promise to never let go.</p>", 
-                i1: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500", 
-                i2: "https://images.unsplash.com/photo-1516589174184-e6646f654862?w=500" 
-            },
-            { 
-                t: "Dublin, Sitcoms & Distance", 
-                b: "<p><span class='drop-cap'>F</span>rom COVID lockdowns to the long miles between us, we found our rhythm through 'The Office' and endless calls. Our fights were real, but our love was realer. I didn't just find a partner in Dublin; I found a HOME in you.</p>", 
-                i1: "https://images.unsplash.com/photo-1522158673245-f00de76db0ad?w=500", 
-                i2: "https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?w=500" 
-            },
-            { 
-                t: "The Wedding 2025", 
-                b: "<p><span class='drop-cap'>W</span>e traded the green of Mehendi for the elegance of a Pink Kanjivaram. #(NOT)VIMAL officially became #ViGotKOMpany. You’ve officially committed to being the boy who catches this clumsy brat whenever she falls—forever.</p>", 
-                i1: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500", 
-                i2: "https://images.unsplash.com/photo-1519741497674-611481863552?w=500" 
-            },
-            { 
-                t: "Happy Valentine's Day", 
-                b: "<div class='valentine-text'>I Love You, V!</div><p style='margin-top:10px;'>To my favorite person: Here’s to our madness, our history, and our future. This is just a recap of how far we’ve come—next year, we’ll have newer stories to tell. I’m so deeply in love with you!</p>", 
-                i1: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500", 
-                i2: "https://images.unsplash.com/photo-1516589174184-e6646f654862?w=500" 
-            }
+            { t: "The Closing Rank", b: "<p>Once, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>", imgs: ["5.jpeg", "6.jpeg"] },
+            { t: "The Barista 'Non-Date'", b: "<p>In Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>", imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"] },
+            { t: "The Hillside Proposal", b: "<p>Ganesh Chaturthi 2018. Recreating 'Om Shanti Oshana' at the TV Tower hill—in 35° heat and slippers!</p>", imgs: ["7.jpeg", "9.jpeg", "10.jpeg", "11.jpeg", "12.jpeg"] },
+            { t: "Milestones", b: "<p>Intern, and beyond!</p>", imgs: ["13.jpeg", "14.jpeg", "15.jpeg", "16.jpeg", "20.jpeg", "21.jpeg"] },
+            { t: "The NEVER Ending Long Distance", b: "<p>We survived it!</p>", imgs: ["22.jpeg", "23.jpeg", "24.jpeg", "25.jpeg", "26.jpeg", "27.jpeg", "28.jpeg", "29.jpeg"] },
+            { t: "The Wedding 2025", b: "<p>We traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany.</p>", imgs: ["30.jpeg", "31.jpeg", "32.jpeg"] }
         ];
 
-        window.go = function() {
-            document.getElementById('cover').classList.add('hide-cover');
-        };
+        function openSaga() {
+            document.getElementById('book-cover').classList.add('cover-open');
+            document.getElementById('album-content').style.display = 'block';
+            document.getElementById('album-content').style.visibility = 'visible';
+            document.getElementById('nav-ui').style.display = 'flex';
+            updatePage();
+        }
 
-        window.dance = function() {
+        function restartSaga() {
+            current = 0;
+            document.getElementById('final-page').style.display = 'none';
+            const cover = document.getElementById('book-cover');
+            cover.classList.remove('cover-open');
+            cover.style.opacity = "1";
+            cover.style.visibility = "visible";
+            document.getElementById('album-content').style.display = 'none';
+            document.getElementById('nav-ui').style.display = 'none';
+        }
+
+        function danceNo() {
             const no = document.getElementById('no-btn');
-            no.style.left = Math.random() * 80 + 10 + "%";
-            no.style.top = Math.random() * 60 + 20 + "%";
-        };
+            no.style.left = Math.random() * 70 + "%";
+            no.style.top = Math.random() * 70 + "%";
+        }
 
-        window.noGuilt = function() {
-            const msg = document.getElementById('guilt-trip');
-            const yes = document.getElementById('yes-btn');
-            msg.innerText = trips[tIdx % trips.length];
-            tIdx++;
-            if (yesScale < 3) {
-                yesScale += 0.3;
-                yes.style.transform = `scale(${yesScale})`;
+        function updatePage() {
+            const ch = chapters[current];
+            document.getElementById('ch-title').innerText = ch.t;
+            document.getElementById('ch-body').innerHTML = ch.b;
+            const area = document.getElementById('collage-area');
+            area.innerHTML = '';
+            ch.imgs.forEach((img, i) => {
+                const frame = document.createElement('div');
+                frame.className = 'photo-frame';
+                const r = Math.random() * 20 - 10;
+                frame.style.left = `calc(50% - 85px + ${(Math.random() - 0.5) * 140}px)`;
+                frame.style.top = `calc(50% - 110px + ${(Math.random() - 0.5) * 110}px)`;
+                frame.style.setProperty('--r', r + 'deg');
+                frame.innerHTML = `<img src="imgs/${img}" onerror="this.src='https://via.placeholder.com/150x180?text=Photo'">`;
+                area.appendChild(frame);
+                setTimeout(() => frame.classList.add('visible'), 200 + (i * 120));
+            });
+            document.getElementById('prev').style.visibility = current === 0 ? 'hidden' : 'visible';
+            document.getElementById('next').innerText = current === chapters.length - 1 ? "FINISH ➔" : "NEXT ➔";
+        }
+
+        function step(dir) {
+            if (dir === 1 && current === chapters.length - 1) {
+                document.getElementById('final-page').style.display = 'flex';
+                document.getElementById('album-content').style.visibility = 'hidden';
+                document.getElementById('nav-ui').style.display = 'none';
+                return;
             }
-            window.dance();
-        };
+            const turner = document.getElementById('page-turner');
+            turner.classList.add('turning');
+            setTimeout(() => { current += dir; updatePage(); }, 500);
+            setTimeout(() => { turner.classList.remove('turning'); }, 1050);
+        }
 
-        window.step = function(dir) {
-            const wrapper = document.getElementById('content-wrapper');
-            wrapper.classList.add('fade-out');
-            
-            setTimeout(() => {
-                current += dir;
-                const ch = chapters[current];
-                document.getElementById('st-title').innerText = ch.t;
-                document.getElementById('st-body').innerHTML = ch.b;
-                document.getElementById('pic1').src = ch.i1;
-                document.getElementById('pic2').src = ch.i2;
-                
-                document.getElementById('prev').style.visibility = current === 0 ? 'hidden' : 'visible';
-                document.getElementById('next').style.visibility = current === chapters.length - 1 ? 'hidden' : 'visible';
-                
-                wrapper.classList.remove('fade-out');
-            }, 500);
-        };
+        /* MASTER DRAG LOGIC */
+        document.addEventListener('mousedown', startDrag);
+        document.addEventListener('touchstart', startDrag, {passive: false});
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, {passive: false});
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+
+        function startDrag(e) {
+            const target = e.target.closest('.photo-frame');
+            if (!target) return;
+            activeElement = target; activeElement.style.zIndex = ++zIdx; activeElement.style.transition = 'none';
+            const t = e.touches ? e.touches[0] : e;
+            startX = t.clientX; startY = t.clientY;
+            initX = activeElement.offsetLeft; initY = activeElement.offsetTop;
+        }
+
+        function drag(e) {
+            if (!activeElement) return;
+            const t = e.touches ? e.touches[0] : e;
+            activeElement.style.left = (initX + (t.clientX - startX)) + "px";
+            activeElement.style.top = (initY + (t.clientY - startY)) + "px";
+        }
+
+        function endDrag() {
+            if (!activeElement) return;
+            activeElement.style.transition = 'opacity 1s var(--breezy), transform 1s var(--breezy)';
+            activeElement = null;
+        }
     </script>
 </body>
 </html>
