@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>#ViGotKOMpany | The Saga</title>
+    <title>#ViGotKOMpany | The Storybook</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=MedievalSharp&family=Great+Vibes&display=swap" rel="stylesheet">
     
     <style>
@@ -11,141 +11,163 @@
             --royal-red: #641212;
             --gold: #ffd700;
             --parchment: #fdfaf0;
-            --tape-color: rgba(210, 194, 164, 0.5);
+            --page-shadow: rgba(0,0,0,0.2);
         }
 
-        body, html { margin: 0; padding: 0; background: var(--parchment); height: 100vh; font-family: 'MedievalSharp', serif; overflow: hidden; touch-action: none; }
-        
-        #cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--royal-red); color: white; z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1); }
-        .hide-cover { transform: translateY(-100%); pointer-events: none; }
-        
-        .title { font-family: 'Cinzel Decorative', serif; font-size: clamp(2rem, 6vw, 3.5rem); color: var(--gold); margin: 10px; }
-
-        #story-container { 
-            width: 100%; 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            background-image: radial-gradient(#d2c2a4 0.6px, transparent 0.6px);
-            background-size: 30px 30px;
+        body, html { 
+            margin: 0; padding: 0; background: #2c0505; 
+            height: 100vh; font-family: 'MedievalSharp', serif; 
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; touch-action: none;
         }
-        
-        .text-section { 
-            width: 100%;
-            padding: 20px;
-            text-align: center;
-            z-index: 10;
-            background: linear-gradient(to bottom, var(--parchment) 80%, transparent);
-            box-sizing: border-box;
-        }
-        
-        .drop-cap { font-family: 'Cinzel Decorative'; font-size: 3rem; color: var(--royal-red); float: left; line-height: 0.7; margin-right: 12px; }
-        h2 { font-family: 'Cinzel Decorative'; color: var(--royal-red); margin: 0 0 5px; font-size: 1.5rem; border-bottom: 2px solid var(--gold); display: inline-block; }
 
-        /* COLLAGE AREA */
-        #collage-area {
-            flex: 1;
-            width: 100%;
+        /* THE BOOK FRAME */
+        #storybook {
+            width: 90vw;
+            height: 85vh;
+            max-width: 1000px;
+            background: var(--parchment);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 5px 0 15px rgba(0,0,0,0.1);
+            display: flex;
             position: relative;
-            overflow: hidden; /* Keeps photos from causing scrollbars */
+            border-radius: 5px 15px 15px 5px;
+            perspective: 2000px;
         }
 
-        .photo-frame { 
-            position: absolute;
-            background: #fff;
-            padding: 10px 10px 30px 10px;
-            box-shadow: 5px 15px 30px rgba(0,0,0,0.15);
-            border: 1px solid #eee;
-            width: clamp(160px, 32vw, 240px);
-            cursor: grab;
-            user-select: none;
-            touch-action: none;
-            transition: opacity 0.5s ease, transform 0.1s ease;
-            /* Initial state for animation */
-            opacity: 0;
-            left: 50%;
-            top: 50%;
-        }
-
-        .photo-frame:active { cursor: grabbing; z-index: 1000 !important; }
-
-        .photo-frame::before {
+        /* SPINE SHADOW */
+        #storybook::before {
             content: "";
             position: absolute;
-            top: -8px;
             left: 50%;
-            transform: translateX(-50%) rotate(1deg);
-            width: 60px;
-            height: 20px;
-            background: var(--tape-color);
-            border-left: 1px dotted rgba(0,0,0,0.1);
-            border-right: 1px dotted rgba(0,0,0,0.1);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            width: 30px;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(0,0,0,0.1) 50%, transparent);
+            transform: translateX(-50%);
+            z-index: 20;
+            pointer-events: none;
         }
 
-        .photo-frame img { width: 100%; height: auto; display: block; pointer-events: none; }
-
-        /* NAV */
-        .nav-wrapper {
-            padding: 15px 0 25px;
+        /* COVER PAGE */
+        #cover {
+            position: absolute;
+            width: 100%; height: 100%;
+            background: var(--royal-red);
+            color: white;
+            z-index: 1000;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-            z-index: 100;
-            background: linear-gradient(transparent, var(--parchment) 40%);
+            text-align: center;
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+            transform-origin: left;
+            border-left: 10px solid #4a0d0d;
+            box-shadow: 10px 0 20px rgba(0,0,0,0.3);
         }
 
-        .nav-bar { display: flex; gap: 40px; font-family: 'Cinzel Decorative'; color: #ae9656; font-weight: bold; }
-        .nav-bar span { cursor: pointer; padding: 10px; }
-        #stat-footer { font-size: 0.7rem; color: #888; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px; }
+        .cover-open { transform: rotateY(-110deg); pointer-events: none; }
 
-        #yes-btn { padding: 15px 60px; font-size: 1.3rem; cursor: pointer; background: white; color: var(--royal-red); border: none; border-radius: 50px; font-weight: bold; font-family: 'Cinzel Decorative'; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        /* PAGES */
+        .page {
+            width: 50%;
+            height: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* LEFT PAGE (Text) */
+        #left-page { border-right: 1px solid rgba(0,0,0,0.05); }
+        .drop-cap { font-family: 'Cinzel Decorative'; font-size: 3.5rem; color: var(--royal-red); float: left; line-height: 0.7; margin-right: 12px; }
+        h2 { font-family: 'Cinzel Decorative'; color: var(--royal-red); border-bottom: 2px solid var(--gold); }
+
+        /* RIGHT PAGE (Scrapbook) */
+        #right-page { background: #f9f6ed; }
+        #collage-area { width: 100%; height: 100%; position: relative; }
+
+        .photo-frame {
+            position: absolute;
+            background: #fff;
+            padding: 10px 10px 25px 10px;
+            box-shadow: 3px 8px 15px rgba(0,0,0,0.2);
+            width: 180px;
+            cursor: grab;
+            transition: opacity 0.5s ease;
+        }
+        .photo-frame img { width: 100%; height: auto; display: block; }
+
+        /* ANIMATIONS */
+        .page-flip-overlay {
+            position: absolute;
+            top: 0; right: 0; width: 50%; height: 100%;
+            background: var(--parchment);
+            z-index: 50;
+            transform-origin: left;
+            transition: transform 0.8s ease-in-out;
+            pointer-events: none;
+            box-shadow: inset 10px 0 20px rgba(0,0,0,0.1);
+        }
+        .flipping { transform: rotateY(-180deg); }
+
+        /* BUTTONS */
+        .nav-btns {
+            position: absolute; bottom: 20px; width: 100%;
+            display: flex; justify-content: center; gap: 100px;
+            font-family: 'Cinzel Decorative'; font-weight: bold; color: #ae9656;
+        }
+        .nav-btns span { cursor: pointer; z-index: 100; }
+
+        #yes-btn { 
+            background: var(--gold); color: var(--royal-red); 
+            border: none; padding: 15px 40px; font-size: 1.5rem; 
+            font-family: 'Cinzel Decorative'; cursor: pointer; border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
         #no-btn { 
-    position: absolute; /* Changed from fixed to absolute to keep it in the box */
-    padding: 10px 30px; 
-    cursor: pointer; 
-    background: rgba(255,255,255,0.1); 
-    color: white; 
-    border: 1px solid rgba(255,255,255,0.5); 
-    border-radius: 50px; 
-    z-index: 1100; 
-}
+            position: absolute; background: rgba(255,255,255,0.2); 
+            border: 1px solid white; color: white; padding: 5px 15px; 
+            border-radius: 20px; cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
 
-    <div id="cover">
-        <div style="font-family: 'Great Vibes'; font-size: 2rem; color: var(--gold);">The Chronicles of #ViGotKOMpany</div>
-        <h1 class="title">Will You Enter?</h1>
-        <div style="height: 150px; display: flex; align-items: center;">
-            <button id="yes-btn" onclick="window.go()">YES</button>
-            <button id="no-btn" onmouseover="window.dance()">NO</button>
+    <div id="storybook">
+        <div id="cover">
+            <div style="font-family: 'Great Vibes'; font-size: 2.5rem; color: var(--gold);">The Chronicles of</div>
+            <h1 style="font-family: 'Cinzel Decorative'; font-size: 3.5rem; margin: 10px;">ViGotKOMpany</h1>
+            <div style="height: 120px; position: relative; width: 300px;">
+                <button id="yes-btn" onclick="openBook()">OPEN SAGA</button>
+                <button id="no-btn" onmouseover="moveNo()">NO</button>
+            </div>
         </div>
-    </div>
 
-    <div id="story-container">
-        <div id="content-wrapper" class="text-section">
+        <div class="page" id="left-page">
             <h2 id="st-title">The Closing Rank</h2>
             <div id="st-body">
-                <p><span class="drop-cap">O</span>nce, at NIT Warangal, destiny used a 'closing rank' to write our first chapter.</p>
+                <p><span class="drop-cap">O</span>nce, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>
             </div>
         </div>
 
-        <div id="collage-area"></div>
+        <div class="page" id="right-page">
+            <div id="collage-area"></div>
+        </div>
 
-        <div class="nav-wrapper">
-            <div class="nav-bar">
-                <span id="prev" style="visibility:hidden" onclick="window.step(-1)">↞ REGRET</span>
-                <span id="next" onclick="window.step(1)">NEXT CHAOS ➔</span>
-            </div>
-            <div id="stat-footer">Current Status: Lab Partners 🧬</div>
+        <div id="page-overlay" class="page-flip-overlay"></div>
+
+        <div class="nav-btns">
+            <span id="prev" style="visibility:hidden" onclick="changeChapter(-1)">↞ PREVIOUS</span>
+            <span id="next" onclick="changeChapter(1)">NEXT CHAPTER ➔</span>
         </div>
     </div>
 
     <script>
         let current = 0;
-        let highestZ = 10;
-        
+        let highestZ = 100;
+
         const chapters = [
             { t: "The Closing Rank", b: "<p>Once, at NIT Warangal, destiny used a 'closing rank' to write our first chapter. In a chaotic lab, you passed me your notes.</p>", imgs: ["5.jpeg", "6.jpeg"] },
             { t: "The Barista 'Non-Date'", b: "<p>In Nov 2017, we met for a 'treat.' We shared more than Samosas—there were blushes, laughs, and a spark.</p>", imgs: ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg"] },
@@ -155,91 +177,77 @@
             { t: "The Wedding 2025", b: "<p><span class='drop-cap'>W</span>e traded lab coats for Kanjivarams. #(NOT)VIMAL officially became #ViGotKOMpany.</p>", imgs: ["30.jpeg","31.jpeg","32.jpeg"] }
         ];
 
-        window.go = () => document.getElementById('cover').classList.add('hide-cover');
-        window.dance = () => {
-            const no = document.getElementById('no-btn');
-            no.style.left = Math.random() * 70 + 15 + "%";
-            no.style.top = Math.random() * 70 + 15 + "%";
-        };
+        function openBook() {
+            document.getElementById('cover').classList.add('cover-open');
+            scatterImages(chapters[0].imgs);
+        }
+
+        function moveNo() {
+            const btn = document.getElementById('no-btn');
+            btn.style.left = Math.random() * 200 + "px";
+            btn.style.top = Math.random() * 100 + "px";
+        }
 
         function scatterImages(imgs) {
             const area = document.getElementById('collage-area');
             area.innerHTML = '';
-            
-            // Get dimensions of the area to find true center
             const rect = area.getBoundingClientRect();
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
 
             imgs.forEach((src, i) => {
                 const frame = document.createElement('div');
                 frame.className = 'photo-frame';
+                const rotation = Math.random() * 20 - 10;
                 
-                // Controlled random toss within the central 40% of the area
-                const rotation = Math.floor(Math.random() * 20) - 10;
-                const offsetX = (Math.random() - 0.5) * (rect.width * 0.4);
-                const offsetY = (Math.random() - 0.5) * (rect.height * 0.3);
-
-                // Set initial position
-                frame.style.left = `${centerX + offsetX - 100}px`; // -100 to roughly center the frame itself
-                frame.style.top = `${centerY + offsetY - 100}px`;
-                frame.style.zIndex = i + 1;
-
+                // Position around center of the right page
+                frame.style.left = (rect.width/2 - 90) + (Math.random() * 60 - 30) + "px";
+                frame.style.top = (rect.height/2 - 100) + (Math.random() * 60 - 30) + "px";
+                frame.style.transform = `rotate(${rotation}deg)`;
                 frame.innerHTML = `<img src="${src}">`;
+                
                 area.appendChild(frame);
-
-                // Entrance animation
-                setTimeout(() => {
-                    frame.style.opacity = '1';
-                    frame.style.transform = `rotate(${rotation}deg)`;
-                }, i * 150);
-
-                // Draggable logic
-                let isDragging = false;
-                let startX, startY, initialLeft, initialTop;
-
-                const start = (e) => {
-                    isDragging = true;
-                    frame.style.zIndex = ++highestZ;
-                    const touch = e.type === 'touchstart' ? e.touches[0] : e;
-                    startX = touch.clientX;
-                    startY = touch.clientY;
-                    initialLeft = frame.offsetLeft;
-                    initialTop = frame.offsetTop;
-                };
-
-                const move = (e) => {
-                    if (!isDragging) return;
-                    const touch = e.type === 'touchmove' ? e.touches[0] : e;
-                    const dx = touch.clientX - startX;
-                    const dy = touch.clientY - startY;
-                    frame.style.left = (initialLeft + dx) + 'px';
-                    frame.style.top = (initialTop + dy) + 'px';
-                };
-
-                const stop = () => isDragging = false;
-
-                frame.addEventListener('mousedown', start);
-                frame.addEventListener('touchstart', start, {passive: true});
-                window.addEventListener('mousemove', move);
-                window.addEventListener('touchmove', move, {passive: false});
-                window.addEventListener('mouseup', stop);
-                window.addEventListener('touchend', stop);
+                makeDraggable(frame);
             });
         }
 
-        // Initialize first chapter
-        window.addEventListener('load', () => scatterImages(chapters[0].imgs));
+        function changeChapter(dir) {
+            const overlay = document.getElementById('page-overlay');
+            overlay.style.transition = "transform 0.8s ease-in-out";
+            overlay.classList.add('flipping');
 
-        window.step = (dir) => {
-            current += dir;
-            const ch = chapters[current];
-            document.getElementById('st-title').innerText = ch.t;
-            document.getElementById('st-body').innerHTML = ch.b;
-            scatterImages(ch.imgs);
-            document.getElementById('prev').style.visibility = current === 0 ? 'hidden' : 'visible';
-            document.getElementById('next').style.visibility = current === chapters.length - 1 ? 'hidden' : 'visible';
-        };
+            setTimeout(() => {
+                current += dir;
+                const ch = chapters[current];
+                document.getElementById('st-title').innerText = ch.t;
+                document.getElementById('st-body').innerHTML = ch.b;
+                scatterImages(ch.imgs);
+
+                document.getElementById('prev').style.visibility = current === 0 ? 'hidden' : 'visible';
+                document.getElementById('next').style.visibility = current === chapters.length - 1 ? 'hidden' : 'visible';
+                
+                overlay.style.transition = "none";
+                overlay.classList.remove('flipping');
+            }, 400);
+        }
+
+        function makeDraggable(el) {
+            let isDragging = false, startX, startY, initL, initT;
+            const start = (e) => {
+                isDragging = true;
+                el.style.zIndex = ++highestZ;
+                const t = e.touches ? e.touches[0] : e;
+                startX = t.clientX; startY = t.clientY;
+                initL = el.offsetLeft; initT = el.offsetTop;
+            };
+            const move = (e) => {
+                if (!isDragging) return;
+                const t = e.touches ? e.touches[0] : e;
+                el.style.left = (initL + t.clientX - startX) + "px";
+                el.style.top = (initT + t.clientY - startY) + "px";
+            };
+            el.onmousedown = el.ontouchstart = start;
+            window.onmousemove = window.ontouchmove = move;
+            window.onmouseup = window.ontouchend = () => isDragging = false;
+        }
     </script>
 </body>
 </html>
